@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-import app.controllers.trades.trades_controller as tc
+import app.controllers.trades_controller as tc
 
 router = APIRouter()
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-import app.controllers.portfolio.portfolio_controller as pc
+import app.controllers.portfolio_controller as pc
 
 router = APIRouter()
 
