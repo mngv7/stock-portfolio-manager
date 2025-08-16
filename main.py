@@ -1,13 +1,8 @@
 from fastapi import FastAPI
+from app.models.users_models import User
 from app.routes import portfolio_router as pr
-from app.routes import trades_router as tr
 from app.routes import users_router as ur
 from app.routes import login_router as lr
-
-users = {
-    'ztaylor': {"password": "password"},
-    'admin': {"password": "admin"}
-}
 
 app = FastAPI(
     title="Stock Portfolio Tracker API",
@@ -16,7 +11,6 @@ app = FastAPI(
 )
 
 app.include_router(pr.router)
-app.include_router(tr.router)
 app.include_router(ur.router)
 app.include_router(lr.router)
 

@@ -1,5 +1,5 @@
-from models.trades_models import Trade
-from utils.exceptions import InvalidTradeError
+from app.models.trades_models import Trade
+from app.utils.exceptions import InvalidTradeError
 
 class Portfolio():
     def __init__(self) -> None:
@@ -30,3 +30,9 @@ class Portfolio():
 
     def get_average_price(self) -> float:
         return 0.0
+    
+    def get_assets(self) -> dict:
+        return self.assets
+
+    def get_trades(self) -> dict:
+        return self.trades
