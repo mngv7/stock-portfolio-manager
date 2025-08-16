@@ -4,6 +4,11 @@ from app.routes import trades_router as tr
 from app.routes import users_router as ur
 from app.routes import login_router as lr
 
+users = {
+    'ztaylor': {"password": "password"},
+    'admin': {"password": "admin"}
+}
+
 app = FastAPI(
     title="Stock Portfolio Tracker API",
     description="Tool for managing a stock portfolio and forecasting prices.",
@@ -18,3 +23,12 @@ app.include_router(lr.router)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=3000)
+
+# TODO
+# 1) CPU intensive task -- application uses a CPU intensive task.
+# 2) CPU load testing -- generate a script or manual method to load down server.
+# 3) Data types -- store at least two type of data.
+# 4) Containerize the app -- bundle and store on AWS.
+# 5) Deploy the container -- pull from AWS ECR and deploy on EC2 instance.
+# 6) REST API
+# 7) User login

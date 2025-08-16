@@ -1,0 +1,2 @@
+class InvalidTradeError(Exception):
+    pass

@@ -1,10 +1,6 @@
 from fastapi import Request, HTTPException
 from app.utils.auth import generate_access_token
-
-users = {
-    'ztaylor': {"password": "password"},
-    'admin': {"password": "admin"}
-}
+from main import users
 
 async def login(request: Request):
     data = await request.json()
