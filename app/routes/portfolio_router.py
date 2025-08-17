@@ -1,5 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 import app.controllers.portfolio_controller as pc
+from app.utils.auth import authenticate_token
+from app.utils.auth import AuthUser
 from pydantic import BaseModel
 
 class TradeRequest(BaseModel):
@@ -10,14 +12,14 @@ class TradeRequest(BaseModel):
 
 router = APIRouter()
 
-@router.get("/users/{username}/portfolio/assets")
-def get_portfolio_assets(username: str):
-    return pc.get_portfolio_assets(username)
+@router.get("/portfolio/assets")
+def get_portfolio_assets(user: AuthUser = Depends(authenticate_token)):
+    return pc.get_portfolio_assets(user.username)
 
-@router.post("/users/{username}/portfolio/trades")
-def log_trade(username: str, trade: TradeRequest):
-    return pc.log_trade(username, trade.ticker, trade.avg_price, trade.quantity, trade.fee)
+@router.post("/portfolio/trades")
+def log_trade(trade: TradeRequest, user: AuthUser = Depends(authenticate_token)):
+    return pc.log_trade(user.username, trade.ticker, trade.avg_price, trade.quantity, trade.fee)
 
-@router.get("/users/{username}/portfolio/trades")
-def get_trade_history(username: str):
-    return pc.get_trade_history(username)
+@router.get("/portfolio/trades")
+def get_trade_history(user: AuthUser = Depends(authenticate_token)):
+    return pc.get_trade_history(user.username)
