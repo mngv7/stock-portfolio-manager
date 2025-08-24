@@ -49,12 +49,15 @@ class Portfolio():
         
         return result
 
-    def monte_carlo_forecast(self, simulations=50000, time_frame="1y") -> dict:
-        portfolio_weights = self.get_portfolio_weights()
+    def monte_carlo_forecast(self, simulations=50000, time_frame="1y", days=252) -> dict:
+        # Get portfolio weights
         portfolio_weights = np.array([self.get_portfolio_weights()[ticker] for ticker in self.assets.keys()])
+        
+        # Covariance and mean returns
         cov_matrix = self.get_portfolio_cov()
         mean_return = {}
 
+        # Collect mean annual returns
         for ticker, _ in self.assets.items():
             asset = yf.Ticker(ticker)
             historical_prices = asset.history(period=time_frame)['Close']
@@ -63,17 +66,30 @@ class Portfolio():
             mean_return[ticker] = mean_return_annual
 
         mean_vector = np.array([mean_return[ticker] for ticker in self.assets.keys()])
-        n_assets = len(mean_vector)
-        # 1. Cholesky decomposition
-        L = np.linalg.cholesky(cov_matrix)
+        
+        # Precompute Cholesky for correlated random draws
+        chol_decomp = np.linalg.cholesky(cov_matrix)
 
-        # 2. Generate independent standard normal randoms
-        Z = np.random.randn(simulations, n_assets)
+        # Store portfolio simulations
+        portfolio_returns = np.zeros(simulations)
 
-        # 3. Apply correlation
-        simulated_returns = Z @ L.T + mean_vector
-        portfolio_returns = simulated_returns @ portfolio_weights
+        for sim in range(simulations):
+            portfolio_value = 1.0  # start normalized
+            for day in range(days):
+                # Generate correlated random shocks
+                rand_normals = np.random.normal(size=len(self.assets))
+                correlated_returns = mean_vector / days + (chol_decomp @ rand_normals) / np.sqrt(days)
+                
+                # Portfolio daily return
+                portfolio_daily_return = correlated_returns @ portfolio_weights
+                
+                # Compound portfolio value
+                portfolio_value *= (1 + portfolio_daily_return)
 
+            # Store final portfolio value
+            portfolio_returns[sim] = portfolio_value - 1  # total return over horizon
+
+        # Compute statistics
         expected_return = np.mean(portfolio_returns)
         volatility = np.std(portfolio_returns)
         percentile_5 = np.percentile(portfolio_returns, 5)
@@ -88,6 +104,7 @@ class Portfolio():
             "VaR_95": var_95,
             "distribution": portfolio_returns
         }
+
 
     def get_portfolio_cov(self):
         returns_dict = {}

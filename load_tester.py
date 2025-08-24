@@ -3,7 +3,7 @@ import time
 
 url = "http://ec2-3-27-35-211.ap-southeast-2.compute.amazonaws.com:8080/portfolio/assets"
 numberOfRequests = 500
-jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlphY2siLCJleHAiOjE3NTYwMzYwMDF9.ogw1QfTbPvKbmJeD1Fo2Zf_FeoHck0VHfsN1HpQoSLQ"
+jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlphY2siLCJleHAiOjE3NTYwMzcyOTR9.cKHzUs_IvosW9qCsQgCkgesX0_lpJTDcAa8DpwDteq8"
 
 totalTime = 0
 
