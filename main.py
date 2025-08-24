@@ -14,10 +14,6 @@ app.include_router(pr.router)
 app.include_router(ur.router)
 app.include_router(lr.router)
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3000)
-
 # TODO
 # 1) CPU intensive task -- application uses a CPU intensive task.
 # 2) CPU load testing -- generate a script or manual method to load down server.
