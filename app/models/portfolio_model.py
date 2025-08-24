@@ -63,7 +63,15 @@ class Portfolio():
             mean_return[ticker] = mean_return_annual
 
         mean_vector = np.array([mean_return[ticker] for ticker in self.assets.keys()])
-        simulated_returns = np.random.multivariate_normal(mean_vector, cov_matrix, size=simulations)
+        n_assets = len(mean_vector)
+        # 1. Cholesky decomposition
+        L = np.linalg.cholesky(cov_matrix)
+
+        # 2. Generate independent standard normal randoms
+        Z = np.random.randn(simulations, n_assets)
+
+        # 3. Apply correlation
+        simulated_returns = Z @ L.T + mean_vector
         portfolio_returns = simulated_returns @ portfolio_weights
 
         expected_return = np.mean(portfolio_returns)
