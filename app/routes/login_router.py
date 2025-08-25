@@ -10,4 +10,5 @@ class LoginRequest(BaseModel):
 
 @router.post("/login")
 async def login(request: LoginRequest):
+    print(request)
     return await lc.login(request.username, request.password)
