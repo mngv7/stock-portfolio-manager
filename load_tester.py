@@ -3,14 +3,13 @@ import time
 
 url = "http://ec2-3-27-35-211.ap-southeast-2.compute.amazonaws.com:8080/portfolio/assets"
 numberOfRequests = 500
-jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlphY2siLCJleHAiOjE3NTYwMzcyOTR9.cKHzUs_IvosW9qCsQgCkgesX0_lpJTDcAa8DpwDteq8"
+jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlphY2siLCJleHAiOjE3NTYwMzc4MDl9.-zSYqnOIfTueRQ-CCzq28QnX6O5WgHPi5mlTRv-lvu8"
 
 totalTime = 0
 
 def time_ms():
     return round(time.time() * 1000)
 
-# Add the Authorization header
 headers = {
     "Authorization": f"Bearer {jwt_token}"
 }

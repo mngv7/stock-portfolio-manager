@@ -105,7 +105,6 @@ class Portfolio():
             "distribution": portfolio_returns
         }
 
-
     def get_portfolio_cov(self):
         returns_dict = {}
 

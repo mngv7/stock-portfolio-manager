@@ -1,0 +1,7 @@
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5; /* full-screen background */
+    font-family: 'Century Gothic', sans-serif; /* optional global font */
+}
