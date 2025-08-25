@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import portfolio_router as pr
 from app.routes import users_router as ur
 from app.routes import login_router as lr
+from app.routes import auth_router as ar
 
 origins = [
     "http://localhost:5173"
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(pr.router)
 app.include_router(ur.router)
 app.include_router(lr.router)
+app.include_router(ar.router)
 
 # TODO
 # 1) CPU intensive task -- application uses a CPU intensive task.
