@@ -21,7 +21,7 @@ function LoginContainer() {
             if (response?.authToken) {
                 localStorage.setItem('jwt', response.authToken);
                 setShowLoginFailed(false);
-                navigate('/app/')
+                navigate('/app/portfolio')
             }
         } catch (err) {
             setShowLoginFailed(true);

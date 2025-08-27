@@ -121,5 +121,5 @@ class Portfolio():
     def get_assets(self) -> dict:
         return self.assets
 
-    def get_trades(self) -> dict:
+    def get_trades(self) -> list[Trade]:
         return self.trades
