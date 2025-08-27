@@ -55,3 +55,19 @@ export async function getTrades(jwt: string) {
 
     return response.json()
 }
+
+export async function getPortfolioValue(jwt: string) {
+  const response = await fetch(`${API_URL}/portfolio/value`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${jwt}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching portfolio value: ${response.status}`);
+  }
+
+  return response.json(); // expect { "YYYY-MM-DD": value, ... }
+}

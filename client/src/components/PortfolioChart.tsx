@@ -1,58 +1,48 @@
-import { LineChart } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts/LineChart';
 import { useEffect, useState } from 'react';
-import { getTrades } from '../api/portfolio';
-import { getTickerDailyHistory } from '../api/yfinance';
-
-type Trade = {
-  ticker: string;
-  avg_price: number;
-  quantity: number;
-  fee: number;
-  timestamp: number;
-};
+import { getPortfolioValue } from '../api/portfolio';
 
 function PortfolioChart() {
     const token = localStorage.getItem("jwt");
-    const [trades, setTrades] = useState<[Trade] | null>(null);
-    const [tradeHistory, setTradeHistory] = useState(null);
+    const [portfolioHistory, setPortfolioHistory] = useState<{ [date: string]: number } | null>(null);
 
     useEffect(() => {
-        const tickerParams = {
-            ticker: 'AAPL',
-            timestamp: 1724720034
-        }
-        const fetchTickerHistory = async() => {
-            const history = await getTickerDailyHistory(tickerParams);
-            setTradeHistory(history)
-        }
-
-        const fetchTrades = async() => {
+        const fetchPortfolioHistory = async () => {
             if (token) {
-                const trades = await getTrades(token);
-                setTrades(trades);
+                try {
+                    const history = await getPortfolioValue(token);
+                    setPortfolioHistory(history);
+                } catch (err) {
+                    console.error(err);
+                }
             }
-        }
+        };
 
-        fetchTrades();
-        fetchTickerHistory();
-    }, []);
+        fetchPortfolioHistory();
+    }, [token]);
 
+    const lineChartData = portfolioHistory
+        ? Object.entries(portfolioHistory).map(([date, value]) => ({
+              x: new Date(date),
+              y: value,
+          }))
+        : [];
 
-    console.log(trades);
-    console.log(tradeHistory);
+    const formattedData = lineChartData.map((d) => d.y)
+
     return (
         <div>
             <LineChart
-                xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                xAxis={[{ scaleType: 'time', data: lineChartData.map((d) => d.x) }]}
                 series={[
                     {
-                    data: [4, 5.5, 2, 8.5, 1.5, 5],
+                        data: formattedData, showMark: false
                     },
                 ]}
                 height={300}
             />
         </div>
-    )
+    );
 }
 
 export default PortfolioChart;

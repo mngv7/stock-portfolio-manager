@@ -13,7 +13,7 @@ def log_trade(username: str, ticker: str, avg_price: float, quantity: int, fee: 
     if username not in users:
         raise HTTPException(status_code=404, detail=f'{username} not found')
     
-    trade = Trade(ticker, avg_price, quantity, fee)
+    trade = Trade(ticker, avg_price, quantity, fee, 1724720034)
     users[username].portfolio.apply_trade(trade)
     return {"message": "Trade successfully logged!"}
 
@@ -22,3 +22,9 @@ def get_trade_history(username: str):
         raise HTTPException(status_code=404, detail=f'{username} not found')
     
     return users[username].portfolio.get_trades()
+
+def get_portfolio_historical_value(username: str):
+    if username not in users:
+        raise HTTPException(status_code=404, detail=f'{username} not found')
+    
+    return users[username].portfolio.get_portfolio_historical_value()

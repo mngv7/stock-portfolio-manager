@@ -30,27 +30,6 @@ def log_trade(trade: TradeRequest, user: AuthUser = Depends(authenticate_token))
 def get_trade_history(user: AuthUser = Depends(authenticate_token)):
     return pc.get_trade_history(user.username)
 
-@router.get("/ticker/price")
-def get_ticker_history_day(ticker: str, timestamp: float):
-    ticker = ticker.upper()
-    stock = yf.Ticker(ticker)
-
-    try:
-        start_dt = datetime.fromtimestamp(timestamp)
-
-        end_dt = datetime.now()
-
-        data = stock.history(
-            start=start_dt.strftime("%Y-%m-%d"),
-            end=end_dt.strftime("%Y-%m-%d"),
-            interval="1d"
-        )
-
-        if data.empty:
-            raise HTTPException(status_code=404, detail="No historical data found")
-        
-        prices = data["Close"].tolist()
-
-        return prices
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/portfolio/value")
+def get_portfolio_historical_value(user: AuthUser = Depends(authenticate_token)):
+    return pc.get_portfolio_historical_value(user.username)
