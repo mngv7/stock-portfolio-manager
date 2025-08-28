@@ -30,21 +30,25 @@ function LoginContainer() {
 
     return (
         <div className='login-container'>
-            <h1>Login</h1>
-            <p style={{ color: 'red', marginTop: '10px', minHeight: '20px' }}>
+            <h1 className='login-title'>Login</h1>
+            <p className='login-error'>
                 {showLoginFailed ? "Login Failed!" : ""}
             </p>
-            <div className='input-button-group'>
+            <div className='login-input-button-group'>
                 <input 
+                    className='login-input'
                     placeholder='Username'
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <input
+                    className='login-input'
                     placeholder='Password'
                     onChange={(e) => setPassword(e.target.value)}
                     type='password'
                 />
-                <button onClick={handleLogin}>Login</button>
+                <button className='login-button' onClick={handleLogin}>
+                    Login
+                </button>
             </div>
         </div>
     )

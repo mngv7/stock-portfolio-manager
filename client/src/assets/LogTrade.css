@@ -1,0 +1,66 @@
+.log-trade-container {
+    width: 400px;
+    min-height: 450px;
+    border-radius: 20px;
+    background-color: #e0e0e0; /* soft cream instead of gray */
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* subtle lift */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px; /* space between elements */
+}
+
+.log-trade-container h1 {
+    font-size: 40px;
+    color: #3f5a36; /* forest green header */
+    margin-bottom: 20px;
+}
+
+.log-trade-container input {
+    width: 80%;
+    height: 45px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d1d1;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.log-trade-container input:focus {
+    outline: none;
+    border-color: #3f5a36;
+    box-shadow: 0 0 6px rgba(44, 95, 45, 0.3);
+}
+
+.log-trade-container button {
+    width: 85%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    background-color: #3f5a36; /* forest green */
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.log-trade-container button:hover {
+    background-color: #3b7d3f; /* slightly lighter green */
+    transform: translateY(-1px);
+}
+
+.log-trade-container button:active {
+    transform: translateY(1px);
+}
+
+/* Adjust DateTimePicker width */
+.log-trade-container .MuiLocalizationProvider-root,
+.log-trade-container .MuiInputBase-root {
+    width: 80%;
+    margin-bottom: 20px;
+}

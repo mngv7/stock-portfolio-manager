@@ -36,7 +36,9 @@ function PortfolioChart() {
                 xAxis={[{ scaleType: 'time', data: lineChartData.map((d) => d.x) }]}
                 series={[
                     {
-                        data: formattedData, showMark: false
+                        data: formattedData,
+                        showMark: false,
+                        color: '#3f5a36'
                     },
                 ]}
                 height={300}

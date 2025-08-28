@@ -10,13 +10,7 @@ function NavBar() {
     return (
         <nav className='navbar'>
             <NavLink to='/app/portfolio'>
-                My Portfolio
-            </NavLink>
-            <NavLink to='/app/trade'>
-                Trade
-            </NavLink>
-            <NavLink to='/app/analysis'>
-                Analysis
+                Dashboard
             </NavLink>
             <div className="navbar-right">
                 <NavLink to='/' onClick={clearJwt}>

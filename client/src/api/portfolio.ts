@@ -5,6 +5,7 @@ export interface Trade {
     avg_price: number
     quantity: number
     fee: number
+    timestamp: number
 }
 
 export async function getPortfolioAssets(jwt: string) {
@@ -69,5 +70,21 @@ export async function getPortfolioValue(jwt: string) {
     throw new Error(`Error fetching portfolio value: ${response.status}`);
   }
 
-  return response.json(); // expect { "YYYY-MM-DD": value, ... }
+  return response.json();
+}
+
+export async function getMonteCarloForecast(jwt: string) {
+    const response = await fetch(`${API_URL}/portfolio/forecast`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error calculating monte carlo forecast ${response.status}`);
+    }
+
+    return response.json();
 }

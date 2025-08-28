@@ -1,0 +1,9 @@
+.dashboard {
+    padding: 20px
+}
+
+.trade-analysis {
+    display: flex;
+    padding: 50px;
+    justify-content: space-around;
+}

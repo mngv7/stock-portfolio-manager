@@ -1,0 +1,27 @@
+import Analysis from "./Analysis";
+import LogTrade from "./LogTrade";
+import Portfolio from "./Portfolio";
+import '../assets/Dashboard.css'
+import { useState } from "react";
+
+function Dashboard() {
+    const [reloadGraph, setReloadGraph] = useState(0);
+
+    const handleNewTrade = () => {
+        setReloadGraph(reloadGraph + 1)
+    }
+
+    return (
+        <div>
+            <div className="dashboard">
+                <Portfolio trigger={reloadGraph}/>
+                <div className="trade-analysis">
+                    <LogTrade handleLogTrade={handleNewTrade}/>
+                    <Analysis />
+                </div>
+            </div>
+        </div>
+    )   
+}
+
+export default Dashboard;

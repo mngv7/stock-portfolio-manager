@@ -11,7 +11,18 @@
     padding-top: 50px;
 }
 
-.input-button-group {
+.login-title {
+    font-size: 48px;
+    color: #0B1215;
+}
+
+.login-error {
+    color: red;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+.login-input-button-group {
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -19,11 +30,8 @@
     align-items: center;
 }
 
-input, button {
+.login-input {
     box-sizing: border-box;
-}
-
-input {
     width: 400px;
     height: 45px;
     padding: 5px;
@@ -31,13 +39,13 @@ input {
     border: none;
 }
 
-input::placeholder {
+.login-input::placeholder {
     color: black;
     font-size: 15px;
 }
 
-button {
-    font-size: large;
+.login-button {
+    font-size: 20px;
     width: 400px;
     height: 50px;
     background-color: #0B1215;
@@ -45,15 +53,9 @@ button {
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    font-size: 20px;
-}
-
-button:hover {
-    background-color: #111a1e;
     transition: background-color 0.2s ease;
 }
 
-h1 {
-    font-size: 48px;
-    color: #0B1215;
+.login-button:hover {
+    background-color: #111a1e;
 }

@@ -1,33 +1,48 @@
 import { useState } from "react";
 import { postTrade } from "../api/portfolio";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import '../assets/LogTrade.css'
 
-function LogTrade() {
+function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
     const token = localStorage.getItem("jwt");
-    const [ticker, setTicker] = useState('');
-    const [price, setPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [fee, setFee] = useState('');
+    const [ticker, setTicker] = useState("");
+    const [price, setPrice] = useState("");
+    const [quantity, setQuantity] = useState("");
+    const [fee, setFee] = useState("");
+    const [date, setDate] = useState<Dayjs | null>(null);
 
-    const handleLogTrade = async() => {
-        const trade = {
-            ticker,
-            avg_price: parseFloat(price),
-            quantity: parseFloat(quantity),
-            fee: parseFloat(fee)
-        };
+    const logTrade = async() => {
+        if (ticker && price && quantity && fee && date) {
+            const epochDate = Math.floor(date.valueOf() / 1000);
 
-        if (token) {
-            await postTrade(token, trade);
+            const trade = {
+                ticker: ticker,
+                avg_price: parseFloat(price),
+                quantity: parseFloat(quantity),
+                fee: parseFloat(fee),
+                timestamp: epochDate
+            };
+
+            console.log(trade);
+            if (token) {
+                await postTrade(token, trade);
+            }
+            setTicker("");
+            setPrice("");
+            setQuantity("");
+            setFee("");
+            setDate(null);
+            handleLogTrade();
         }
-
-        setTicker('');
-        setPrice('');
-        setQuantity('');
-        setFee('');
     };
 
     return (
         <div className="log-trade-container">
+            <h1>Trade</h1>
             <input 
                 placeholder="Ticker" 
                 value={ticker} 
@@ -55,7 +70,22 @@ function LogTrade() {
                 onChange={(e) => setFee(e.target.value)} 
             />
             <br/>
-            <button onClick={handleLogTrade}>Log Trade</button>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DateTimePicker']}>
+                <DateTimePicker
+                    label="Trade Time"
+                    value={date}
+                    onChange={(e) => setDate(e)}
+                    minTime={dayjs().hour(9).minute(30)}
+                    maxTime={dayjs().hour(16).minute(0)}
+                    shouldDisableDate={(day) => {
+                        const dayOfWeek = day.day();
+                        return dayOfWeek === 0 || dayOfWeek === 6
+                    }}
+                />
+            </DemoContainer>
+            </LocalizationProvider>
+            <button onClick={logTrade}>Log Trade</button>
         </div>
     );
 }

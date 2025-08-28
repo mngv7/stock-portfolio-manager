@@ -3,14 +3,13 @@ import app.controllers.portfolio_controller as pc
 from app.utils.auth import authenticate_token
 from app.utils.auth import AuthUser
 from pydantic import BaseModel
-import yfinance as yf
-from datetime import datetime
 
 class TradeRequest(BaseModel):
     ticker: str
     avg_price: float
     quantity: int
     fee: float
+    timestamp: int
 
 class TickerHistoryRequest(BaseModel):
     ticker: str
@@ -24,7 +23,7 @@ def get_portfolio_assets(user: AuthUser = Depends(authenticate_token)):
 
 @router.post("/portfolio/trades")
 def log_trade(trade: TradeRequest, user: AuthUser = Depends(authenticate_token)):
-    return pc.log_trade(user.username, trade.ticker, trade.avg_price, trade.quantity, trade.fee)
+    return pc.log_trade(user.username, trade.ticker, trade.avg_price, trade.quantity, trade.fee, trade.timestamp)
 
 @router.get("/portfolio/trades")
 def get_trade_history(user: AuthUser = Depends(authenticate_token)):
@@ -33,3 +32,7 @@ def get_trade_history(user: AuthUser = Depends(authenticate_token)):
 @router.get("/portfolio/value")
 def get_portfolio_historical_value(user: AuthUser = Depends(authenticate_token)):
     return pc.get_portfolio_historical_value(user.username)
+
+@router.get("/portfolio/forecast")
+def get_monte_carlo_forecase(user: AuthUser = Depends(authenticate_token)):
+    return pc.calculate_monte_carlo_simulation(user.username)

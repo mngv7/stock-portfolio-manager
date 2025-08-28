@@ -1,0 +1,32 @@
+.analysis {
+    width: 400px;
+    min-height: 450px;
+    border-radius: 20px;
+    background-color: #e0e0e0; /* soft cream instead of gray */
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* subtle lift */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px; /* space between elements */
+}
+
+.analysis h1 {
+    font-size: 40px;
+    color: #3f5a36; /* forest green header */
+    margin-bottom: 20px;
+}
+
+.analysis button {
+    width: 85%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    background-color: #3f5a36; /* forest green */
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}

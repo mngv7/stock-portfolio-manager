@@ -1,0 +1,30 @@
+.charts {
+    display: flex;
+    gap: 20px;           /* spacing between charts */
+    align-items: flex-start;
+}
+
+.charts .line-chart {
+    flex: 1;             /* takes remaining space */
+}
+
+.charts .pie-chart {
+    width: 500px;        /* fixed width */
+    height: 500px;
+    flex-shrink: 0;      /* don’t shrink */
+}
+
+.portfolio {
+    padding-top: 10px;
+    padding-left: 50px;
+    height: 450px;
+    border-radius: 20px;
+    background-color: #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* subtle lift */
+}
+
+.portfolio h1 {
+    font-size: 40px;
+    color: #3f5a36; /* forest green header */
+    margin-bottom: 20px;
+}

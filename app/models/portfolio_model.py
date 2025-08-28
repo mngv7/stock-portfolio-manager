@@ -52,7 +52,10 @@ class Portfolio():
 
         return result
 
-    def monte_carlo_forecast(self, simulations=50000, time_frame="1y", days=252) -> dict:
+    def monte_carlo_forecast(self, simulations=1000, time_frame="1y", days=252) -> dict:
+        if len(self.assets.keys()) < 2:
+            return {}
+
         portfolio_weights = np.array([self.get_portfolio_weights()[ticker] for ticker in self.assets.keys()])
         cov_matrix = self.get_portfolio_cov()
         mean_return = {}
@@ -68,6 +71,7 @@ class Portfolio():
         portfolio_returns = np.zeros(simulations)
 
         for sim in range(simulations):
+            print(sim)
             portfolio_value = 1.0
             for day in range(days):
                 rand_normals = np.random.normal(size=len(self.assets))
@@ -83,13 +87,14 @@ class Portfolio():
         var_95 = np.percentile(portfolio_returns, 5)
 
         return {
-            "expected_return": expected_return,
-            "volatility": volatility,
-            "5th_percentile": percentile_5,
-            "95th_percentile": percentile_95,
-            "VaR_95": var_95,
-            "distribution": portfolio_returns
+            "expected_return": float(expected_return),
+            "volatility": float(volatility),
+            "5th_percentile": float(percentile_5),
+            "95th_percentile": float(percentile_95),
+            "VaR_95": float(var_95),
+            "distribution": portfolio_returns.tolist()  # convert numpy array to list
         }
+
 
     def get_portfolio_cov(self):
         returns_dict = {}

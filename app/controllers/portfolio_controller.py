@@ -9,11 +9,11 @@ def get_portfolio_assets(username: str):
         raise HTTPException(status_code=404, detail=f'{username} not found')
     return users[username].portfolio.get_assets()
 
-def log_trade(username: str, ticker: str, avg_price: float, quantity: int, fee: float):
+def log_trade(username: str, ticker: str, avg_price: float, quantity: int, fee: float, timestamp: int):
     if username not in users:
         raise HTTPException(status_code=404, detail=f'{username} not found')
     
-    trade = Trade(ticker, avg_price, quantity, fee, 1724720034)
+    trade = Trade(ticker, avg_price, quantity, fee, timestamp)
     users[username].portfolio.apply_trade(trade)
     return {"message": "Trade successfully logged!"}
 
@@ -28,3 +28,9 @@ def get_portfolio_historical_value(username: str):
         raise HTTPException(status_code=404, detail=f'{username} not found')
     
     return users[username].portfolio.get_portfolio_historical_value()
+
+def calculate_monte_carlo_simulation(username: str):
+    if username not in users:
+        raise HTTPException(status_code=404, detail=f'{username} not found')
+    print("Running monte carlo forecast!")
+    return users[username].portfolio.monte_carlo_forecast()
