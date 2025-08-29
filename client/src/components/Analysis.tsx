@@ -41,7 +41,7 @@ function Analysis() {
     return (
         <div className="analysis">
             <h1>Analysis</h1>
-            {loading && <p>Running Simulation...</p>} 
+            {loading && <p>Running Simulation...</p>}
             Expected Return: {expectedReturn}
             <br />
             Volatility: {volatility}
