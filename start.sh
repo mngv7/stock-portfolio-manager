@@ -5,7 +5,7 @@ HOST="0.0.0.0"
 PORT="8080"
 
 echo "Starting server"
-cd /client
+cd client/
 npm install
 npm run dev
 cd ..
