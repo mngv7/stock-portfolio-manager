@@ -1,12 +1,11 @@
 #!/bin/bash
+set -e 
 
-APP_MODULE="main:app"
-HOST="0.0.0.0"
-PORT="8080"
+echo "Starting container..."
 
-echo "Starting server"
-cd client/
+cd client
 npm install
-npm run dev
-cd ..
-uvicorn "$APP_MODULE" --host "$HOST" --port "$PORT"
+npm run dev &
+
+cd ../
+uvicorn main:app --host 0.0.0.0 --port 5000

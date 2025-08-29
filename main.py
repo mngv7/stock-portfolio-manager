@@ -5,9 +5,7 @@ from app.routes import users_router as ur
 from app.routes import login_router as lr
 from app.routes import auth_router as ar
 
-origins = [
-    "http://localhost:5173"
-]
+origins = ['*']
 
 app = FastAPI(
     title="Stock Portfolio Tracker API",
