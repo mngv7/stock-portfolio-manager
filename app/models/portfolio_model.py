@@ -52,7 +52,7 @@ class Portfolio():
 
         return result
 
-    def monte_carlo_forecast(self, simulations=1000, time_frame="1y", days=252) -> dict:
+    def monte_carlo_forecast(self, simulations=50000, time_frame="1y", days=252) -> dict:
         if len(self.assets.keys()) < 2:
             return {}
 
@@ -71,7 +71,6 @@ class Portfolio():
         portfolio_returns = np.zeros(simulations)
 
         for sim in range(simulations):
-            print(sim)
             portfolio_value = 1.0
             for day in range(days):
                 rand_normals = np.random.normal(size=len(self.assets))
