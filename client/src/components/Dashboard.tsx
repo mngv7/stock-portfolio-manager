@@ -3,6 +3,7 @@ import LogTrade from "./LogTrade";
 import Portfolio from "./Portfolio";
 import '../assets/Dashboard.css'
 import { useState } from "react";
+import TradesLog from "./TradesLog";
 
 function Dashboard() {
     const [reloadGraph, setReloadGraph] = useState(0);
@@ -19,6 +20,7 @@ function Dashboard() {
                     <LogTrade handleLogTrade={handleNewTrade}/>
                     <Analysis />
                 </div>
+                <TradesLog />
             </div>
         </div>
     )   

@@ -41,9 +41,20 @@ export async function postTrade(jwt: string, trade: Trade) {
     return response.json()
 }
 
-// TODO: unused endpoint
-export async function getTrades(jwt: string) {
-    const response = await fetch(`${API_URL}/api/v1/portfolio/trades`, {
+export async function getTrades(jwt: string, pageNo: number = 1, pageSize: number = 10, ticker?: string, sortOrder?: string) {
+    const params = new URLSearchParams()
+    params.append("page_no", pageNo.toString());
+    params.append("page_size", pageSize.toString());
+
+    if (ticker) {
+        params.append("ticker", ticker);
+    }
+
+    if (sortOrder) {
+        params.append("sort_order", sortOrder);
+    }
+
+    const response = await fetch(`${API_URL}/api/v1/portfolio/trades?${params.toString()}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

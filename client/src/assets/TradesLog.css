@@ -1,0 +1,20 @@
+.trades-log-container {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    padding-left: 20px;
+}
+
+.trades-log-container h1 {
+    padding-top: 20px;
+    font-size: 40px;
+    color: #3f5a36; /* forest green header */
+    margin-bottom: 20px;
+}
+
+.search-footer {
+    display: flex;
+    align-items: center;        /* vertically centers inside flex row */
+    justify-content: center;    /* horizontally centers everything */
+    gap: 10px;                  /* space between buttons and text */
+    margin-top: 1rem;           /* optional spacing */
+}

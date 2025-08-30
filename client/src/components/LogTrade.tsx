@@ -45,6 +45,7 @@ function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
             <h1>Trade</h1>
             <input 
                 placeholder="Ticker" 
+                maxLength={10}
                 value={ticker} 
                 onChange={(e) => setTicker(e.target.value)} 
             />
