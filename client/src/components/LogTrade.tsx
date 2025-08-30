@@ -27,7 +27,6 @@ function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
                 timestamp: epochDate
             };
 
-            console.log(trade);
             if (token) {
                 await postTrade(token, trade);
             }

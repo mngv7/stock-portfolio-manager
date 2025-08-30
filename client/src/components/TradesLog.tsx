@@ -42,7 +42,6 @@ function TradesLog() {
 
         callGetTrades();
     }, [loadTrades, pageNumber, sortOrder, tickerSort, token]);
-    console.log(totalTrades);
     const maxPage = Math.max(1, Math.ceil(totalTrades / pageSize));
 
     return (

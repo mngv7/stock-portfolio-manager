@@ -2,6 +2,7 @@
     background-color: #e0e0e0;
     border-radius: 20px;
     padding-left: 20px;
+    height: 800px;
 }
 
 .trades-log-container h1 {
@@ -16,5 +17,5 @@
     align-items: center;        /* vertically centers inside flex row */
     justify-content: center;    /* horizontally centers everything */
     gap: 10px;                  /* space between buttons and text */
-    margin-top: 1rem;           /* optional spacing */
+    margin-top: auto;           /* optional spacing */
 }
