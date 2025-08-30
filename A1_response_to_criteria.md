@@ -94,10 +94,10 @@ Additional criteria
 
 ### Extensive REST API features
 
-- **One line description:** Not attempted
+- **One line description:** Extensive features were used, especially for the /portfolio endpoints. Versioning for all end points for version control. Pagination to limit list response for trades and users. Getting trades can be filtered/sorted by ticker and timestamp.
 - **Video timestamp:**
 - **Relevant files:**
-    - 
+    - /app/models/portfolio_router.py
 
 ### External API(s)
 
@@ -107,13 +107,6 @@ Additional criteria
     - /app/routes/yfinance_router.py
     - /app/models/portfolio_model.py
 
-### Additional types of data
-
-- **One line description:** Not attempted
-- **Video timestamp:**
-- **Relevant files:**
-    - 
-
 ### Custom processing
 
 - **One line description:** Monte Carlo with Geometric Brownian Motion implemented manually, with helper functions such as get_portfolio_cov(), and other data manipulation within get_portfolio_historical_value. See https://www.investopedia.com/articles/07/montecarlo.asp for simulation theory.
@@ -121,23 +114,9 @@ Additional criteria
 - **Relevant files:**
     - /app/models/portfolio_model.py
 
-### Infrastructure as code
-
-- **One line description:** Not attempted
-- **Video timestamp:**
-- **Relevant files:**
-    - 
-
 ### Web client
 
 - **One line description:** Web client with login page and dashboard to access API endpoints. Charts and graphs included.
 - **Video timestamp:**
 - **Relevant files:**
     - /client/src/*
-
-### Upon request
-
-- **One line description:** Not attempted
-- **Video timestamp:**
-- **Relevant files:**
-    - 

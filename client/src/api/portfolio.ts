@@ -9,7 +9,7 @@ export interface Trade {
 }
 
 export async function getPortfolioAssets(jwt: string) {
-    const response = await fetch(`${API_URL}/portfolio/assets`, {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/assets`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export async function getPortfolioAssets(jwt: string) {
 }
 
 export async function postTrade(jwt: string, trade: Trade) {
-    const response = await fetch(`${API_URL}/portfolio/trades`, {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/trades`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -41,8 +41,9 @@ export async function postTrade(jwt: string, trade: Trade) {
     return response.json()
 }
 
+// TODO: unused endpoint
 export async function getTrades(jwt: string) {
-    const response = await fetch(`${API_URL}/portfolio/trades`, {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/trades`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -57,8 +58,8 @@ export async function getTrades(jwt: string) {
     return response.json()
 }
 
-export async function getPortfolioValue(jwt: string) {
-  const response = await fetch(`${API_URL}/portfolio/value`, {
+export async function getPortfolioHistoricalValue(jwt: string) {
+  const response = await fetch(`${API_URL}/api/v1/portfolio/value`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -74,7 +75,7 @@ export async function getPortfolioValue(jwt: string) {
 }
 
 export async function getMonteCarloForecast(jwt: string) {
-    const response = await fetch(`${API_URL}/portfolio/forecast`, {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/forecast`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

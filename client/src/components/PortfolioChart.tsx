@@ -1,6 +1,6 @@
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useEffect, useState } from 'react';
-import { getPortfolioValue } from '../api/portfolio';
+import { getPortfolioHistoricalValue } from '../api/portfolio';
 
 function PortfolioChart() {
     const token = localStorage.getItem("jwt");
@@ -10,7 +10,7 @@ function PortfolioChart() {
         const fetchPortfolioHistory = async () => {
             if (token) {
                 try {
-                    const history = await getPortfolioValue(token);
+                    const history = await getPortfolioHistoricalValue(token);
                     setPortfolioHistory(history);
                 } catch (err) {
                     console.error(err);
@@ -30,6 +30,12 @@ function PortfolioChart() {
 
     const formattedData = lineChartData.map((d) => d.y)
 
+    if (!lineChartData) {
+        return (
+            <p>Loading...</p>
+        )
+    }
+
     return (
         <div>
             <LineChart
@@ -38,7 +44,8 @@ function PortfolioChart() {
                     {
                         data: formattedData,
                         showMark: false,
-                        color: '#3f5a36'
+                        color: '#3f5a36',
+                        curve: 'linear'
                     },
                 ]}
                 height={300}

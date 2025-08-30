@@ -17,22 +17,22 @@ class TickerHistoryRequest(BaseModel):
 
 router = APIRouter()
 
-@router.get("/portfolio/assets")
+@router.get("/api/v1/portfolio/assets")
 def get_portfolio_assets(user: AuthUser = Depends(authenticate_token)):
     return pc.get_portfolio_assets(user.username)
 
-@router.post("/portfolio/trades")
+@router.post("/api/v1/portfolio/trades")
 def log_trade(trade: TradeRequest, user: AuthUser = Depends(authenticate_token)):
     return pc.log_trade(user.username, trade.ticker, trade.avg_price, trade.quantity, trade.fee, trade.timestamp)
 
-@router.get("/portfolio/trades")
+@router.get("/api/v1/portfolio/trades")
 def get_trade_history(user: AuthUser = Depends(authenticate_token)):
     return pc.get_trade_history(user.username)
 
-@router.get("/portfolio/value")
+@router.get("/api/v1/portfolio/value")
 def get_portfolio_historical_value(user: AuthUser = Depends(authenticate_token)):
     return pc.get_portfolio_historical_value(user.username)
 
-@router.get("/portfolio/forecast")
+@router.get("/api/v1/portfolio/forecast")
 def get_monte_carlo_forecase(user: AuthUser = Depends(authenticate_token)):
     return pc.calculate_monte_carlo_simulation(user.username)

@@ -8,6 +8,6 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
-@router.post("/login")
+@router.post("/api/v1/login")
 async def login(request: LoginRequest):
     return await lc.login(request.username, request.password)

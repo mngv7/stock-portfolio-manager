@@ -6,7 +6,7 @@ export interface loginData {
 }
 
 export async function login(loginData: loginData) {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_URL}/api/v1/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

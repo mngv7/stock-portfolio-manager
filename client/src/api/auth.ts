@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 export async function isJwtValid(jwt: string) {
-    const response = await fetch(`${API_URL}/auth`, {
+    const response = await fetch(`${API_URL}/api/v1/auth`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
