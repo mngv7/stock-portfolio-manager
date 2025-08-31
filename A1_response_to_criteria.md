@@ -22,7 +22,7 @@ Core criteria
 
 ### Deploy the container
 
-- **EC2 instance ID:**
+- **EC2 instance ID:** i-0cf8e2ffab9dacd47
 - **Video timestamp:**
 
 ### User login
@@ -84,7 +84,7 @@ Core criteria
 
 ### CPU load testing
 
- **One line description:** Python script to generate multiple requests for '/portfolio/forecast' endpoint.
+ **One line description:** Python script to generate multiple requests for '/portfolio/forecast' endpoint. Achieved average 81% load over 15 minutes.
 - **Video timestamp:** 
 - **Relevant files:**
     - /load_tester.py
@@ -94,7 +94,7 @@ Additional criteria
 
 ### Extensive REST API features
 
-- **One line description:** Extensive features were used, especially for the /portfolio endpoints. Versioning for all end points for version control. Pagination to limit list response for trades and users. Getting trades can be filtered/sorted by ticker and timestamp.
+- **One line description:** Extensive features were used, especially for the /portfolio endpoints. Versioning for all end points for version control. Getting trades can be filtered/sorted by ticker and timestamp, results are also paginated.
 - **Video timestamp:**
 - **Relevant files:**
     - /app/models/portfolio_router.py

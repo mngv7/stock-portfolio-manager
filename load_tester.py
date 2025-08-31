@@ -1,9 +1,9 @@
 import requests
 import time
 
-url = "http://ec2-3-27-35-211.ap-southeast-2.compute.amazonaws.com:8080/portfolio/assets"
+url = "http://ec2-3-25-228-25.ap-southeast-2.compute.amazonaws.com:5000/api/v1/portfolio/forecast"
 numberOfRequests = 500
-jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlphY2siLCJleHAiOjE3NTYwMzc4MDl9.-zSYqnOIfTueRQ-CCzq28QnX6O5WgHPi5mlTRv-lvu8"
+jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlphY2siLCJleHAiOjE3NTY2MDczMzZ9.SGfYUuenqeQgSEez9jV63gHg4gLjWMIZHPavmGzadGI"
 
 totalTime = 0
 
@@ -11,7 +11,7 @@ def time_ms():
     return round(time.time() * 1000)
 
 headers = {
-    "Authorization": f"Bearer {jwt_token}"
+    "Authorization": f"Bearer {jwt}"
 }
 
 for i in range(numberOfRequests):

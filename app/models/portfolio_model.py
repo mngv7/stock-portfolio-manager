@@ -122,7 +122,7 @@ class Portfolio():
             "5th_percentile": float(percentile_5),
             "95th_percentile": float(percentile_95),
             "VaR_95": float(var_95),
-            "distribution": portfolio_returns.tolist()  # convert numpy array to list
+            "distribution": portfolio_returns.tolist()
         }
 
     def get_portfolio_cov(self):

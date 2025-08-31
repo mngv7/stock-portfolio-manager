@@ -60,7 +60,7 @@ def delete_trade(username: str, trade_id: int):
     success = users[username].portfolio.delete_trade(trade_id)
     if not success:
         raise HTTPException(status_code=404, detail=f"Trade with id {trade_id} not found")
-    return None  # 204 No Content
+    return None
 
 def get_portfolio_historical_value(username: str):
     if username not in users:
