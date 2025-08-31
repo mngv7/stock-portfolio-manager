@@ -1,8 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException, status
 from app.utils.users import users
 from app.models.trades_models import Trade
-
-router = APIRouter()
 
 def get_portfolio_assets(username: str):
     if username not in users:
@@ -45,7 +43,24 @@ def get_trade_history(username: str, page_no: int = 1, page_size: int = 10, tick
     reverse = sort_order.lower() == "desc"
     return {"trade_list": sorted(trades, key=lambda t: t.timestamp, reverse=reverse),
             "length": trades_len}
+
+def update_trade(username: str, trade_id: int, ticker: str, avg_price: float, quantity: int, fee: float, timestamp: int):
+    if username not in users:
+        raise HTTPException(status_code=404, detail=f'{username} not found')
     
+    updated_trade = users[username].portfolio.update_trade(trade_id, ticker, avg_price, quantity, fee, timestamp)
+    if not updated_trade:
+        raise HTTPException(status_code=404, detail=f"Trade with id {trade_id} not found")
+    return {"message": "Trade successfully updated!", "trade": updated_trade}
+
+def delete_trade(username: str, trade_id: int):
+    if username not in users:
+        raise HTTPException(status_code=404, detail=f'{username} not found')
+    
+    success = users[username].portfolio.delete_trade(trade_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Trade with id {trade_id} not found")
+    return None  # 204 No Content
 
 def get_portfolio_historical_value(username: str):
     if username not in users:

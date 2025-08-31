@@ -9,6 +9,8 @@ class Portfolio():
     def __init__(self) -> None:
         self.assets = {}
         self.trades: dict[str, list[Trade]] = {}
+        self.trade_index: dict[int, Trade] = {}
+        self.next_trade_id = 1
 
     def apply_trade(self, trade: Trade) -> None:
         ticker = trade.ticker
@@ -29,10 +31,39 @@ class Portfolio():
         else:
             raise InvalidTradeError("Invalid trade!")
 
-        # Store trade in dict by ticker
         if ticker not in self.trades:
             self.trades[ticker] = []
+        trade_id = self.next_trade_id
+        self.next_trade_id += 1
+        self.trade_index[trade_id] = trade
+        trade.id = trade_id
         self.trades[ticker].append(trade)
+
+    def update_trade(self, trade_id: int, ticker: str, avg_price: float, quantity: int, fee: float, timestamp: int):
+        if trade_id not in self.trade_index:
+            return None
+        trade = self.trade_index[trade_id]
+        trade.ticker = ticker
+        trade.avg_price = avg_price
+        trade.quantity = quantity
+        trade.fee = fee
+        trade.timestamp = timestamp
+        return {
+            "id": trade_id,
+            "ticker": ticker,
+            "avg_price": avg_price,
+            "quantity": quantity,
+            "fee": fee,
+            "timestamp": timestamp
+        }
+
+    def delete_trade(self, trade_id: int):
+        if trade_id not in self.trade_index:
+            return False
+        trade = self.trade_index.pop(trade_id)
+        if trade.ticker in self.trades:
+            self.trades[trade.ticker] = [t for t in self.trades[trade.ticker] if getattr(t, "id", None) != trade_id]
+        return True
 
     def get_portfolio_weights(self) -> dict:
         result = {}
@@ -94,7 +125,6 @@ class Portfolio():
             "distribution": portfolio_returns.tolist()  # convert numpy array to list
         }
 
-
     def get_portfolio_cov(self):
         returns_dict = {}
         for ticker in self.assets.keys():
@@ -133,7 +163,6 @@ class Portfolio():
             portfolio_value = portfolio_value.add(ticker_value, fill_value=0)
 
         return portfolio_value
-
 
     def get_assets(self) -> dict:
         return self.assets
