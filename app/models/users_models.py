@@ -5,4 +5,4 @@ class User:
         self.email = email
         self.username = username
         self.password_hashed = password_hashed
-        self.portfolio = Portfolio()
+        self.portfolio = Portfolio(email)
