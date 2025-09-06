@@ -9,7 +9,7 @@ trades_table_name = "n11592931-trades"
 
 dynamodb = boto3.client("dynamodb", region_name=region)
 
-def create_table_users():
+def create_users_table():
     try:
         response = dynamodb.create_table(
             TableName=users_table_name,
@@ -26,3 +26,44 @@ def create_table_users():
         print("Create Table response:", response) 
     except ClientError as e:
         print(e)
+
+def create_portfolios_table():
+    try:
+        response = dynamodb.create_table(
+            TableName=portfolios_table_name,
+            AttributeDefinitions=[
+                {"AttributeName": "qut-username", "AttributeType": "S"},
+                {"AttributeName": "email", "AttributeType": "S"},
+            ],
+            KeySchema=[
+                {"AttributeName": "qut-username", "KeyType": "HASH"},
+                {"AttributeName": "qut-username", "KeyType": "RANGE"},
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
+        )
+        print("Create Table response:", response) 
+    except ClientError as e:
+        print(e)
+
+def create_trades_table():
+    try:
+        response = dynamodb.create_table(
+            TableName=trades_table_name,
+            AttributeDefinitions=[
+                {"AttributeName": "qut-username", "AttributeType": "S"},
+                {"AttributeName": "timestamp#email", "AttributeType": "S"},
+            ],
+            KeySchema=[
+                {"AttributeName": "qut-username", "KeyType": "HASH"},
+                {"AttributeName": "timestamp#email", "KeyType": "RANGE"},
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
+        )
+        print("Create Table response:", response) 
+    except ClientError as e:
+        print(e)
+
+if __name__ == "__main__":
+    create_users_table()
+    create_portfolios_table()
+    create_trades_table()
