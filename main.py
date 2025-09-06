@@ -23,3 +23,15 @@ app.add_middleware(
 app.include_router(pr.router)
 app.include_router(lr.router)
 app.include_router(ar.router)
+
+# Data Persistence
+
+## NoSQL Database (DynamoDB)
+# https://canvas.qut.edu.au/courses/20367/pages/practical-dynamodb-nosql-database-service-python?module_item_id=2063602
+# Portfolios
+# Trades 
+# Users
+
+## Object storage (S3)
+# https://canvas.qut.edu.au/courses/20367/pages/practical-s3-blob-storage-service-python?module_item_id=2063601
+# Trade Receipts
