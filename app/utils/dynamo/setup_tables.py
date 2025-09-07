@@ -10,6 +10,11 @@ trades_table_name = "n11592931-trades"
 dynamodb = boto3.client("dynamodb", region_name=region)
 
 def create_users_table():
+    existing_tables = dynamodb.list_tables()['TableNames']
+    if users_table_name in existing_tables:
+        print(f"Table '{users_table_name}' already exists.")
+        return
+
     try:
         response = dynamodb.create_table(
             TableName=users_table_name,
@@ -28,6 +33,11 @@ def create_users_table():
         print(e)
 
 def create_portfolios_table():
+    existing_tables = dynamodb.list_tables()['TableNames']
+    if portfolios_table_name in existing_tables:
+        print(f"Table '{portfolios_table_name}' already exists.")
+        return
+
     try:
         response = dynamodb.create_table(
             TableName=portfolios_table_name,
@@ -46,6 +56,11 @@ def create_portfolios_table():
         print(e)
 
 def create_trades_table():
+    existing_tables = dynamodb.list_tables()['TableNames']
+    if trades_table_name in existing_tables:
+        print(f"Table '{trades_table_name}' already exists.")
+        return
+
     try:
         response = dynamodb.create_table(
             TableName=trades_table_name,
