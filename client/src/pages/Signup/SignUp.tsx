@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import '../assets/loginContainer.css'
 import { useState } from 'react';
-import { signUp, type signUpData } from '../api/auth';
-
+import { signUp, type signUpData } from '../../api/auth';
+import '../Login/loginContainer.css'
 
 function SignUp() {
     const [username, setUsername] = useState('');

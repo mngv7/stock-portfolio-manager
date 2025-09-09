@@ -1,6 +1,6 @@
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useEffect, useState } from 'react';
-import { getPortfolioHistoricalValue } from '../api/portfolio';
+import { getPortfolioHistoricalValue } from '../../api/portfolio';
 
 function PortfolioChart() {
     const token = localStorage.getItem("jwt");

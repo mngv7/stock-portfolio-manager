@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import ProtectedRoute from './components/ProtectedRoute.tsx'
 import Home from './components/Home.tsx'
-import SignUp from './components/SignUp.tsx'
+import SignUp from './pages/Signup/SignUp.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>

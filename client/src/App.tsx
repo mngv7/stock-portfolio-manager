@@ -1,4 +1,4 @@
-import LoginContainer from "./components/LoginContainer"
+import LoginContainer from "./pages/Login/LoginContainer"
 import './assets/App.css'
 import './index.css'
 
