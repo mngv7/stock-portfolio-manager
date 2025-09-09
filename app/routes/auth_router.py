@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from app.utils.auth import authenticate_token
-import app.controllers.auth_controller as ac
+import app.controllers.auth_controller as auth
 from pydantic import BaseModel, EmailStr
-import services.cognito.cognito_services as cognito
+import app.services.cognito.cognito_services as cognito
 
 router = APIRouter()
 
@@ -21,7 +21,7 @@ def check_jwt(user = Depends(authenticate_token)):
 
 @router.post("/api/v1/login")
 async def login(request: LoginRequest):
-    return await ac.login(request.username, request.password)
+    return await auth.login(request.username, request.password)
 
 @router.post("/api/v1/signup")
 def signup(request: SignupRequest):

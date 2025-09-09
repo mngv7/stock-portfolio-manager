@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import '../assets/loginContainer.css'
-import { login } from '../api/login';
+import { login } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
 
 function LoginContainer() {
