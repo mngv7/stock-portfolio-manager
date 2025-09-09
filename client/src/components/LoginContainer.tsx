@@ -28,8 +28,12 @@ function LoginContainer() {
         }
     };
 
+    const handleSignUp = () => {
+        navigate('/signup')
+    };
+
     return (
-        <div className='login-container'>
+        <div className='auth-container login-container'>
             <h1 className='login-title'>Login</h1>
             <p className='login-error'>
                 {showLoginFailed ? "Login Failed!" : ""}
@@ -48,6 +52,9 @@ function LoginContainer() {
                 />
                 <button className='login-button' onClick={handleLogin}>
                     Login
+                </button>
+                <button className='login-button' onClick={handleSignUp}>
+                    Sign Up
                 </button>
             </div>
         </div>
