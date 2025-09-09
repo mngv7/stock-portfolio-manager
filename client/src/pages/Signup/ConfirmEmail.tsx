@@ -1,18 +1,25 @@
 import { useState } from "react";
+import { confirmEmail } from "../../api/auth";
 
 type SignUpContainerProps = {
-    onSuccess: () => void
+    onSuccess: () => void;
+    username: string;
 };
 
-function ConfirmEmail({onSuccess}: SignUpContainerProps) {
+function ConfirmEmail({onSuccess, username}: SignUpContainerProps) {
     const [confirmationCode, setConfirmationCode] = useState('');
 
     const handleReturn = () => {
         onSuccess();
     }
 
-    const handleConfirm = () => {
-        // check confirmation code here
+    const handleConfirm = async () => {
+        if (confirmationCode !== '') {
+            const response = await confirmEmail({username, confirmationCode});
+            console.log(response);
+        } else {
+            console.log("Please enter a confirmation code.");
+        }
     }
 
     return (
