@@ -15,6 +15,10 @@ class SignupRequest(BaseModel):
     email: EmailStr
     password: str
 
+class ConfirmEmailRequest(BaseModel):
+    username: str
+    code: str
+
 @router.post('/api/v1/auth')
 def check_jwt(user = Depends(authenticate_token)):
     return {"user": user}
@@ -26,3 +30,7 @@ async def login(request: LoginRequest):
 @router.post("/api/v1/signup")
 def signup(request: SignupRequest):
     return cognito.signup(request.username, request.email, request.password)
+
+@router.post("/api/v1/confirm_email")
+def confirm_email(request: ConfirmEmailRequest):
+    return cognito.confirm(request.username, request.code)
