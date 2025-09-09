@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import portfolio_router as pr
-from app.routes import login_router as lr
 from app.routes import auth_router as ar
 
 origins = ['*']
@@ -21,5 +20,4 @@ app.add_middleware(
 )
 
 app.include_router(pr.router)
-app.include_router(lr.router)
 app.include_router(ar.router)

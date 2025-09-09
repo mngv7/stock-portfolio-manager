@@ -27,7 +27,7 @@ def signup(username: str, email: str, password: str):
     except Exception as e:
         print(f"Error during sign-up: {e}")
         return None
-    
+
 def authenticate(username: str, password: str):
     client = boto3.client("cognito-idp", region_name="ap-southeast-2")
     try:
