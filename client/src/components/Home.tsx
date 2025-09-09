@@ -1,5 +1,5 @@
-import NavBar from "./NavBar";
-import Dashboard from './Dashboard';
+import NavBar from "./NavBar/NavBar";
+import Dashboard from '../pages/Dashboard/Dashboard';
 
 function Home() {
     return (

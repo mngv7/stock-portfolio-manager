@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getPortfolioAssets } from "../api/portfolio";
-import PortfolioChart from "./PortfolioChart";
+import { getPortfolioAssets } from "../../api/portfolio";
 import { PieChart } from '@mui/x-charts/PieChart';
-import '../assets/Portfolio.css'
+import PortfolioChart from "./PortfolioChart";
+import './Portfolio.css'
 
 function Portfolio({ trigger }: { trigger: number}) {
     const token = localStorage.getItem("jwt");

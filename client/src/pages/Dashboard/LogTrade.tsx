@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { postTrade } from "../api/portfolio";
+import { postTrade } from "../../api/portfolio";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import '../assets/LogTrade.css'
+import './LogTrade.css'
 
 function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
     const token = localStorage.getItem("jwt");

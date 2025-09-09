@@ -1,5 +1,16 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+export interface loginData {
+    username: string,
+    password: string
+}
+
+export interface signUpData {
+    username: string,
+    email: string,
+    password: string
+}
+
 export async function isJwtValid(jwt: string) {
     const response = await fetch(`${API_URL}/api/v1/auth`, {
         method: "POST",
@@ -14,4 +25,41 @@ export async function isJwtValid(jwt: string) {
     }
 
     return true;
+}
+
+export async function login(loginData: loginData) {
+    console.log(API_URL);
+    const response = await fetch(`${API_URL}/api/v1/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(loginData)
+    });
+
+    if (!response.ok) {
+        const error = new Error("Login failed") as any;
+        error.status = response.status;
+        throw error;
+    }
+
+    return response.json();
+}
+
+export async function signUp(signUpData: signUpData) {
+    const response = await fetch(`${API_URL}/api/v1/signup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(signUpData)
+    });
+
+    if (!response.ok) {
+        const error = new Error("Signup failed!") as any;
+        error.status = response.status;
+        throw error;
+    }
+
+    return response.json();
 }
