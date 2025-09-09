@@ -42,33 +42,38 @@ function SignUp() {
     }
 
     return (
-        <div className="auth-container sign-up-container">
-            <h1 className='login-title'>Sign Up</h1>
-            <div className='login-input-button-group'>
-                <input
-                    className='login-input'
-                    placeholder='Email Address'
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                    className='login-input'
-                    placeholder='Username'
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <input
-                    className='login-input'
-                    placeholder='Password'
-                    type='password'
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <input
-                    className='login-input'
-                    placeholder='Confirm Password'
-                    type='password'
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <button className='login-button' onClick={handleSignUp}>Sign Up</button>
-                <button className='login-button' onClick={handleBack}>Back</button>
+        <div className='signup-page'>
+            <div className="auth-container sign-up-container">
+                <h1 className='login-title'>Sign Up</h1>
+                <p className='login-error'>
+                    {!validSignUp ? "Invalid!" : ""}
+                </p>
+                <div className='login-input-button-group'>
+                    <input
+                        className='login-input'
+                        placeholder='Email Address'
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                        className='login-input'
+                        placeholder='Username'
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <input
+                        className='login-input'
+                        placeholder='Password'
+                        type='password'
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <input
+                        className='login-input'
+                        placeholder='Confirm Password'
+                        type='password'
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <button className='login-button' onClick={handleSignUp}>Sign Up</button>
+                    <button className='login-button' onClick={handleBack}>Back</button>
+                </div>
             </div>
         </div>
     )
