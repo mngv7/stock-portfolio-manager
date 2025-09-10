@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { confirmEmail } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 type SignUpContainerProps = {
     onSuccess: () => void;
@@ -8,6 +9,7 @@ type SignUpContainerProps = {
 
 function ConfirmEmail({onSuccess, username}: SignUpContainerProps) {
     const [confirmationCode, setConfirmationCode] = useState('');
+    const navigate = useNavigate();
 
     const handleReturn = () => {
         onSuccess();
@@ -16,6 +18,12 @@ function ConfirmEmail({onSuccess, username}: SignUpContainerProps) {
     const handleConfirm = async () => {
         if (confirmationCode !== '') {
             const response = await confirmEmail({username, confirmationCode});
+            if (!response) {
+                console.log("Invalid verification code!");
+            } else {
+                console.log()
+                navigate('/');
+            }
             console.log(response);
         } else {
             console.log("Please enter a confirmation code.");
@@ -25,6 +33,7 @@ function ConfirmEmail({onSuccess, username}: SignUpContainerProps) {
     return (
         <div className="auth-container login-container">
             <h1>Confirm Email</h1>
+            <button onClick={handleReturn}>Return</button>
             <div className='login-input-button-group'>
                 <input
                     className="login-input"
@@ -33,7 +42,6 @@ function ConfirmEmail({onSuccess, username}: SignUpContainerProps) {
                     onChange={(e) => setConfirmationCode(e.target.value)}
                 />
                 <button className="login-button" onClick={handleConfirm}>Confirm</button>
-                <button className="login-button" onClick={handleReturn}>Return</button>
             </div>
         </div>
     )
