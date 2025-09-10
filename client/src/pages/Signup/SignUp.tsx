@@ -5,17 +5,24 @@ import ConfirmEmail from './ConfirmEmail';
 
 function SignUp() {
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [username, setUsername] = useState('');
 
     if (showConfirmation) {
         return (
             <div className="signup-page">
-                <ConfirmEmail onSuccess={() => setShowConfirmation(false)} />
+                <ConfirmEmail
+                    onSuccess={() => setShowConfirmation(false)}
+                    username={username}
+                />
             </div>
         )    
     }
     return (
         <div className="signup-page">
-            <SignUpContainer onSuccess={() => setShowConfirmation(true)} />
+            <SignUpContainer
+                onSuccess={() => setShowConfirmation(true)}
+                setUsernameParent={setUsername}
+            />
         </div>
     )
 }

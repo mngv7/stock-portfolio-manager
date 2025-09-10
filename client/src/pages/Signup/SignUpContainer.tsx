@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { signUp, type signUpData } from '../../api/auth';
+import { signUp, type SignUpData } from '../../api/auth';
 import '../Login/loginContainer.css'
 
 type SignUpContainerProps = {
   onSuccess: () => void;
+  setUsernameParent: (username: string) => void;
 };
 
-function SignUpContainer({onSuccess}: SignUpContainerProps) {
+function SignUpContainer({onSuccess, setUsernameParent}: SignUpContainerProps) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,7 +20,7 @@ function SignUpContainer({onSuccess}: SignUpContainerProps) {
         navigate('/');
     }
 
-    const validateInput = (data: signUpData, confirmPassword: string): boolean => {
+    const validateInput = (data: SignUpData, confirmPassword: string): boolean => {
         if (data.password.trim() !== confirmPassword) return false;
         if (!data.username.trim()) return false;
         if (!data.email.trim() || !/\S+@\S+\.\S+/.test(data.email)) return false;
@@ -30,8 +31,9 @@ function SignUpContainer({onSuccess}: SignUpContainerProps) {
 
     const handleSignUp = async () => {
         if (validateInput({username, email, password}, confirmPassword )) {
-            // const response = await signUp({username, email, password});
-            // console.log(response);
+            const response = await signUp({username, email, password});
+            console.log(response);
+            setUsernameParent(username);
 
             setUsername('');
             setEmail('');

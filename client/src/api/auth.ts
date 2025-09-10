@@ -1,14 +1,19 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export interface loginData {
+export interface LoginData {
     username: string,
     password: string
 }
 
-export interface signUpData {
+export interface SignUpData {
     username: string,
     email: string,
     password: string
+}
+
+export interface ConfirmEmailData {
+    username: string,
+    confirmationCode: string
 }
 
 export async function isJwtValid(jwt: string) {
@@ -27,7 +32,7 @@ export async function isJwtValid(jwt: string) {
     return true;
 }
 
-export async function login(loginData: loginData) {
+export async function login(loginData: LoginData) {
     console.log(API_URL);
     const response = await fetch(`${API_URL}/api/v2/login`, {
         method: "POST",
@@ -46,7 +51,7 @@ export async function login(loginData: loginData) {
     return response.json();
 }
 
-export async function signUp(signUpData: signUpData) {
+export async function signUp(signUpData: SignUpData) {
     const response = await fetch(`${API_URL}/api/v1/signup`, {
         method: "POST",
         headers: {
@@ -57,6 +62,25 @@ export async function signUp(signUpData: signUpData) {
 
     if (!response.ok) {
         const error = new Error("Signup failed!") as any;
+        error.status = response.status;
+        throw error;
+    }
+
+    return response.json();
+}
+
+
+export async function confirmEmail(confirmEmailData: ConfirmEmailData) {
+    const response = await fetch(`${API_URL}/api/v1/confirm_email`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(confirmEmailData)
+    });
+
+    if (!response.ok) {
+        const error = new Error("Failed to confirm email!") as any;
         error.status = response.status;
         throw error;
     }
