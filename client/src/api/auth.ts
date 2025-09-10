@@ -12,7 +12,7 @@ export interface signUpData {
 }
 
 export async function isJwtValid(jwt: string) {
-    const response = await fetch(`${API_URL}/api/v1/auth`, {
+    const response = await fetch(`${API_URL}/api/v2/auth`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export async function isJwtValid(jwt: string) {
 
 export async function login(loginData: loginData) {
     console.log(API_URL);
-    const response = await fetch(`${API_URL}/api/v1/login`, {
+    const response = await fetch(`${API_URL}/api/v2/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
