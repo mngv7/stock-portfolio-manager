@@ -18,8 +18,10 @@ function LoginContainer() {
         try {
             const response = await login(loginData);
 
-            if (response?.authToken) {
-                localStorage.setItem('jwt', response.authToken);
+            const idToken = response?.IdToken;
+            console.log(idToken);
+            if (idToken) {
+                localStorage.setItem('jwt', idToken);
                 setShowLoginFailed(false);
                 navigate('/app/portfolio')
             }
