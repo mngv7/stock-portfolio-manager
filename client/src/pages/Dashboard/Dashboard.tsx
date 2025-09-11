@@ -1,7 +1,7 @@
 import Analysis from "./Analysis";
 import LogTrade from "./LogTrade";
 import Portfolio from "./Portfolio";
-import '../assets/Dashboard.css'
+import './Dashboard.css'
 import { useState } from "react";
 import TradesLog from "./TradesLog";
 

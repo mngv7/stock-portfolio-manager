@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getTrades } from "../api/portfolio";
-import '../assets/TradesLog.css'
+import { getTrades } from "../../api/portfolio";
+import './TradesLog.css'
 
 function TradesLog() {
     const [loadTrades, setLoadTrades] = useState(0);

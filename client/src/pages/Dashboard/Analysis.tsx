@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getMonteCarloForecast } from "../api/portfolio";
-import '../assets/Analysis.css'
+import { getMonteCarloForecast } from "../../api/portfolio";
+import './Analysis.css'
 
 function Analysis() {
     const token = localStorage.getItem("jwt");
