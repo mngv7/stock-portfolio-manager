@@ -6,7 +6,8 @@ import pandas as pd
 from datetime import datetime
 
 class Portfolio():
-    def __init__(self) -> None:
+    def __init__(self, email) -> None:
+        self.email = email
         self.assets = {}
         self.trades: dict[str, list[Trade]] = {}
         self.trade_index: dict[int, Trade] = {}

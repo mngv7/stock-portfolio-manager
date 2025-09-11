@@ -1,0 +1,23 @@
+import boto3
+from botocore.exceptions import ClientError
+from setup_tables import region, users_table_name, qut_username
+from app.models.users_models import User
+
+dynamodb = boto3.client("dynamodb", region_name=region)
+
+def put_user(user: User):
+    try:
+        response = dynamodb.put_item(
+            TableName=users_table_name,
+            Item={
+                "qut-username": {"S": qut_username},
+                "email": {"S": user.email},
+                "username": {"S": user.username},
+                "password": {"S": user.password_hashed},
+            },
+            ConditionExpression="attribute_not_exists(email)"
+        )
+        print("PutItem response:", response)
+    except ClientError as e:
+        print(e)
+
