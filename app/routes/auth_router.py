@@ -26,11 +26,8 @@ def check_jwt(user = Depends(verify_jwt)):
     return user
 
 @router.post("/api/v2/auth")
-def check_jwt(authorization: str = Header(...)):
-    scheme, _, token = authorization.partition(" ")
-    if scheme.lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Invalid auth scheme")
-    return cognito.verify_jwt(token)
+def check_jwt(user = Depends(verify_jwt)):
+    return user
 
 @router.post("/api/v1/login")
 async def login(request: LoginRequest):
