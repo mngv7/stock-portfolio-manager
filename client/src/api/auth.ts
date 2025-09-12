@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_BUILD_ENV;
 
 export interface LoginData {
     username: string,
