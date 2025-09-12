@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './LoginContainer.css'
 import { login } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
+import LoginChallengeContainer from './LoginChallengeContainer';
 
 function LoginContainer() {
     const [username, setUsername] = useState('');
@@ -18,13 +19,8 @@ function LoginContainer() {
 
         try {
             const response = await login(loginData);
-            console.log(response);
-            // const idToken = response?.IdToken;
             if (response.ChallengeName) {
                 setSession(response.Session);
-                // localStorage.setItem('jwt', idToken);
-                // setShowLoginFailed(false);
-                // navigate('/app/portfolio')
             }
         } catch (err) {
             setShowLoginFailed(true);
@@ -34,6 +30,12 @@ function LoginContainer() {
     const handleSignUp = () => {
         navigate('/signup')
     };
+
+    if (session){
+        return (
+            <LoginChallengeContainer username={username} session={session}/>
+        )
+    }
 
     return (
         <div className='auth-container login-container'>
