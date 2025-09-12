@@ -1,4 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL;
+// TypeScript file
+// @ts-ignore
+import fetchParameterLocal from '../utils/parameterStore'
+
+const API_URL = await fetchParameterLocal(`/n11592931/prod/${import.meta.env.VITE_BUILD_ENV}/api_url`);
 
 export interface Trade {
     ticker: string
@@ -70,19 +74,19 @@ export async function getTrades(jwt: string, pageNo: number = 1, pageSize: numbe
 }
 
 export async function getPortfolioHistoricalValue(jwt: string) {
-  const response = await fetch(`${API_URL}/api/v1/portfolio/value`, {
+    const response = await fetch(`${API_URL}/api/v1/portfolio/value`, {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${jwt}`,
-    },
-  });
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwt}`,
+        },
+    });
 
-  if (!response.ok) {
-    throw new Error(`Error fetching portfolio value: ${response.status}`);
-  }
+    if (!response.ok) {
+        throw new Error(`Error fetching portfolio value: ${response.status}`);
+    }
 
-  return response.json();
+    return response.json();
 }
 
 export async function getMonteCarloForecast(jwt: string) {

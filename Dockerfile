@@ -13,16 +13,12 @@ RUN apt-get update && apt-get install -y curl \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all code
 COPY . .
 
-# Expose ports
-EXPOSE 8080
-EXPOSE 5000
+EXPOSE 80 5000
 
-# Build arg for API URL
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
+ARG VITE_BUILD_ENV=dev
+ENV VITE_BUILD_ENV=${VITE_BUILD_ENV}
 
 # Start script
 COPY start.sh .

@@ -1,4 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL;
+// TypeScript file
+// @ts-ignore
+import fetchParameterLocal from '../utils/parameterStore'
+
+const API_URL = await fetchParameterLocal(`/n11592931/prod/${import.meta.env.VITE_BUILD_ENV}/api_url`);
 
 export interface LoginData {
     username: string,
