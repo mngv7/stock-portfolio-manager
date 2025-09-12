@@ -9,6 +9,7 @@ export interface SignUpData {
     username: string,
     email: string,
     password: string
+    phoneNumber: string
 }
 
 export interface ConfirmEmailData {

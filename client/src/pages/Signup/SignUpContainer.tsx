@@ -11,6 +11,7 @@ type SignUpContainerProps = {
 function SignUpContainer({onSuccess, setUsernameParent}: SignUpContainerProps) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [validSignUp, setValidSignUp] = useState(true);
@@ -25,13 +26,16 @@ function SignUpContainer({onSuccess, setUsernameParent}: SignUpContainerProps) {
         if (!data.username.trim()) return false;
         if (!data.email.trim() || !/\S+@\S+\.\S+/.test(data.email)) return false;
         if (!data.password.trim() || data.password.length < 6) return false;
+        const phoneRegex = /^\+?\d{7,15}$/;
+        if (!phoneRegex.test(data.phoneNumber.trim())) return false;
 
         return true;
     };
 
+
     const handleSignUp = async () => {
-        if (validateInput({username, email, password}, confirmPassword )) {
-            const response = await signUp({username, email, password});
+        if (validateInput({username, email, password, phoneNumber}, confirmPassword )) {
+            const response = await signUp({username, email, password, phoneNumber});
             console.log(response);
             setUsernameParent(username);
 
@@ -55,13 +59,22 @@ function SignUpContainer({onSuccess, setUsernameParent}: SignUpContainerProps) {
             <div className='login-input-button-group'>
                 <input
                     className='login-input'
-                    placeholder='Email Address'
-                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder='Username'
+                    onChange={(e) => setUsername(e.target.value)}
                 />
                 <input
                     className='login-input'
-                    placeholder='Username'
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder='Phone Number'
+                    type='tel'
+                    id='phone'
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                <input
+                    className='login-input'
+                    placeholder='Email Address'
+                    id='email'
+                    type='email'
+                    onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                     className='login-input'
