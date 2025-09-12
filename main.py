@@ -2,10 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import portfolio_router as pr
 from app.routes import auth_router as ar
-from app.utils.users import users
-from app.utils.dynamo.users_table import put_user
 
-origins = ['*']
+origins = ["http://localhost:8080"]
 
 app = FastAPI(
     title="Stock Portfolio Tracker API",
