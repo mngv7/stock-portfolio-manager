@@ -37,8 +37,7 @@ def signup(username: str, email: str, password: str, phone_number: str):
             Password=password,
             SecretHash=secretHash(client_id, client_secret, username),
             UserAttributes=[
-                {"Name": "email", "Value": email},
-                {"Name": "phone_number", "Value": phone_number}]
+                {"Name": "email", "Value": email}]
         )
         return response
     except Exception as e:
@@ -57,11 +56,26 @@ def authenticate(username: str, password: str):
             },
             ClientId=client_id
         )
-        tokens = response["AuthenticationResult"]
-        return tokens
+        return response
     except Exception as e:
         print(f"Error during authentication: {e}")
         return None
+
+def email_otp_challenge(username: str, auth_code: str, session: str):
+    client = boto3.client("cognito-idp", region_name=region)
+    try:
+        response = client.respond_to_auth_challenge(
+            ChallengeName="EMAIL_OTP",
+            Session=session,
+            ChallengeResponses={
+                'USERNAME': username,
+                'SMS_MFA_CODE': auth_code
+            },
+            ClientId=client_id
+        )
+        return response
+    except Exception as e:
+        print(f"Error during MFA authentication: {e}")
 
 def confirm(username: str, confirmation_code: str):
     client = boto3.client("cognito-idp", region_name=region)
