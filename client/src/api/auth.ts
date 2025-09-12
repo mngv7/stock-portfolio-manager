@@ -5,6 +5,12 @@ export interface LoginData {
     password: string
 }
 
+export interface ChallengeData {
+    username: string,
+    authCode: string,
+    session: string
+}
+
 export interface SignUpData {
     username: string,
     email: string,
@@ -41,6 +47,24 @@ export async function login(loginData: LoginData) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(loginData)
+    });
+
+    if (!response.ok) {
+        const error = new Error("Login failed") as any;
+        error.status = response.status;
+        throw error;
+    }
+
+    return response.json();
+}
+
+export async function emailOtpChallenge(challengeData: ChallengeData) {
+    const response = await fetch(`${API_URL}/api/v1/challenge_response`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(challengeData)
     });
 
     if (!response.ok) {

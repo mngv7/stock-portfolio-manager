@@ -21,13 +21,17 @@
     height: 500px;
 }
 
+.challenge-container {
+    height: 300px;
+}
+
 .sign-up-container {
     height: 650px;
 }
 
 .login-title {
     font-size: 48px;
-    color: #0B1215;
+    color: white;
 }
 
 .login-error {
