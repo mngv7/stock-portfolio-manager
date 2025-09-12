@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import portfolio_router as pr
 from app.routes import auth_router as ar
 
-origins = ["http://localhost:8080"]
+origins = ["*"]
 
 app = FastAPI(
     title="Stock Portfolio Tracker API",
