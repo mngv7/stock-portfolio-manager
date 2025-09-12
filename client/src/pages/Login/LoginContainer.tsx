@@ -7,6 +7,7 @@ function LoginContainer() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showLoginFailed, setShowLoginFailed] = useState(false);
+    const [session, setSession] = useState(null);
     const navigate = useNavigate();
 
     const handleLogin = async () => {
@@ -17,13 +18,13 @@ function LoginContainer() {
 
         try {
             const response = await login(loginData);
-
-            const idToken = response?.IdToken;
-            console.log(idToken);
-            if (idToken) {
-                localStorage.setItem('jwt', idToken);
-                setShowLoginFailed(false);
-                navigate('/app/portfolio')
+            console.log(response);
+            // const idToken = response?.IdToken;
+            if (response.ChallengeName) {
+                setSession(response.Session);
+                // localStorage.setItem('jwt', idToken);
+                // setShowLoginFailed(false);
+                // navigate('/app/portfolio')
             }
         } catch (err) {
             setShowLoginFailed(true);

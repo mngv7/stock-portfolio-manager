@@ -22,6 +22,11 @@ class ConfirmEmailRequest(BaseModel):
     username: str
     confirmationCode: str
 
+class ChallengeResponse(BaseModel):
+    username: str
+    authCode: str
+    session: str
+
 @router.post('/api/v1/auth')
 def check_jwt(user = Depends(verify_jwt)):
     return user
@@ -36,16 +41,22 @@ async def login(request: LoginRequest):
 
 @router.post("/api/v2/login")
 def login(request: LoginRequest):
-    auth_response = cognito.authenticate(request.username, request.password)
-    if auth_response:
-        print("auth response received")
-        id_token = auth_response["IdToken"]
+    return cognito.authenticate(request.username, request.password)
+
+@router.post("/api/v1/challenge_response")
+def challenge_response(request: ChallengeResponse):
+    challenge_response = cognito.email_otp_challenge(request.username, request.authCode, request.session)
+    auth_result = challenge_response.get("AuthenticationResult")
+
+    if auth_result:
+        id_token = auth_result.get("IdToken")
         decoded_token = jwt.decode(id_token, options={"verify_signature": False})
-        
         email = decoded_token.get("email")
         user_sub = decoded_token["sub"]
         put_user(email, request.username, user_sub)
-    return auth_response
+        return {"id_token": id_token}
+
+    return {"error": "Challenge not completed"}
 
 @router.post("/api/v1/signup")
 def signup(request: SignupRequest):
