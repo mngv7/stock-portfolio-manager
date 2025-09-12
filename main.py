@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import portfolio_router as pr
 from app.routes import auth_router as ar
 from app.routes import util_router as ur
-
+from app.services.secrets.secrets_manager import get_secret
 origins = ["*"]
 
 app = FastAPI(
