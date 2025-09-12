@@ -53,7 +53,7 @@ def challenge_response(request: ChallengeResponse):
         decoded_token = jwt.decode(id_token, options={"verify_signature": False})
         email = decoded_token.get("email")
         user_sub = decoded_token["sub"]
-        put_user(email, request.username, user_sub)
+        # put_user(email, request.username, user_sub)
         return {"id_token": id_token}
 
     return {"error": "Challenge not completed"}

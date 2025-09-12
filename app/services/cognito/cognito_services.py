@@ -65,13 +65,14 @@ def email_otp_challenge(username: str, auth_code: str, session: str):
     client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.respond_to_auth_challenge(
+            ClientId=client_id,
             ChallengeName="EMAIL_OTP",
             Session=session,
             ChallengeResponses={
                 'USERNAME': username,
-                'SMS_MFA_CODE': auth_code
-            },
-            ClientId=client_id
+                'EMAIL_OTP_CODE': auth_code,  # must match the challenge
+                'SECRET_HASH': secretHash(client_id, client_secret, username)
+            }
         )
         return response
     except Exception as e:
