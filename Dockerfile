@@ -17,7 +17,7 @@ COPY . .
 
 EXPOSE 80 5000
 
-ARG VITE_BUILD_ENV=dev
+ARG VITE_BUILD_ENV=http://localhost:5000
 ENV VITE_BUILD_ENV=${VITE_BUILD_ENV}
 
 # Start script
