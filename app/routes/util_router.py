@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.utils.parameter_store import fetch_parameter_local
+from app.services.parameter_store.parameter_store import fetch_parameter_local
 import os
 
 router = APIRouter()

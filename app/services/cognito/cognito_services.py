@@ -1,23 +1,18 @@
 import boto3
-from dotenv import load_dotenv
-import os
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import requests
 from jose import jwt
 from jose.exceptions import JWTError, ExpiredSignatureError
 import hmac, hashlib, base64 
-from pathlib import Path
 from app.services.secrets.secrets_manager import get_secret
-
-env_path = Path(__file__).parent / ".env"
-load_dotenv(dotenv_path=env_path)
+from app.services.parameter_store.parameter_store import fetch_parameter_local
 
 cognito_secrets = get_secret()
 
-client_id = cognito_secrets["USERS_COGNITO_CLIENT_ID"]
 client_secret = cognito_secrets["USERS_COGNITO_CLIENT_SECRET"]
-user_pool_id = cognito_secrets["USERS_POOL_ID"]
+client_id = fetch_parameter_local("/n11592931/cognito/users/client_id")
+user_pool_id = fetch_parameter_local("/n11592931/cognito/users/pool_id")
 
 security = HTTPBearer()
 
