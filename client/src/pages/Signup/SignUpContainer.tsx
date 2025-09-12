@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { signUp, type SignUpData } from '../../api/auth';
-import '../Login/loginContainer.css'
+import '../Login/LoginContainer.css'
 
 type SignUpContainerProps = {
   onSuccess: () => void;

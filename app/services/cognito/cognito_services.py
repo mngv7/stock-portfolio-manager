@@ -7,14 +7,17 @@ import requests
 from jose import jwt
 from jose.exceptions import JWTError, ExpiredSignatureError
 import hmac, hashlib, base64 
+from pathlib import Path
 
-load_dotenv()
-
-security = HTTPBearer()
+env_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=env_path)
 
 client_id = os.getenv("USERS_COGNITO_CLIENT_ID")
 client_secret = os.getenv("USERS_COGNITO_CLIENT_SECRET")
 user_pool_id = os.getenv("USERS_POOL_ID")
+
+security = HTTPBearer()
+
 region = "ap-southeast-2"
 
 JWKS_URL = f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json"
@@ -25,7 +28,7 @@ def secretHash(clientId, clientSecret, username):
     key = bytes(clientSecret,'utf-8') 
     return base64.b64encode(hmac.new(key, message, digestmod=hashlib.sha256).digest()).decode() 
 
-def signup(username: str, email: str, password: str):
+def signup(username: str, email: str, password: str, phone_number: str):
     client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.sign_up(
@@ -33,7 +36,9 @@ def signup(username: str, email: str, password: str):
             Username=username,
             Password=password,
             SecretHash=secretHash(client_id, client_secret, username),
-            UserAttributes=[{"Name": "email", "Value": email}]
+            UserAttributes=[
+                {"Name": "email", "Value": email},
+                {"Name": "phone_number", "Value": phone_number}]
         )
         return response
     except Exception as e:
@@ -53,7 +58,6 @@ def authenticate(username: str, password: str):
             ClientId=client_id
         )
         tokens = response["AuthenticationResult"]
-        # Optionally verify tokens here using jose or cognito public keys
         return tokens
     except Exception as e:
         print(f"Error during authentication: {e}")
@@ -76,7 +80,7 @@ def confirm(username: str, confirmation_code: str):
 def verify_jwt(credentials: HTTPAuthorizationCredentials = Depends(security)):
     if not credentials or credentials.scheme != "Bearer":
         raise HTTPException(status_code=401, detail="Unauthorized")
-    
+
     token = credentials.credentials
 
     try:
@@ -92,4 +96,3 @@ def verify_jwt(credentials: HTTPAuthorizationCredentials = Depends(security)):
         raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
-

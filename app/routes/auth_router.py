@@ -3,6 +3,8 @@ import app.controllers.auth_controller as auth
 from pydantic import BaseModel, EmailStr
 import app.services.cognito.cognito_services as cognito
 from app.services.cognito.cognito_services import verify_jwt
+from app.services.dynamo.users_table import put_user
+import jwt
 
 router = APIRouter()
 
@@ -14,6 +16,7 @@ class SignupRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+    phoneNumber: str
 
 class ConfirmEmailRequest(BaseModel):
     username: str
@@ -24,23 +27,29 @@ def check_jwt(user = Depends(verify_jwt)):
     return user
 
 @router.post("/api/v2/auth")
-def check_jwt(authorization: str = Header(...)):
-    scheme, _, token = authorization.partition(" ")
-    if scheme.lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Invalid auth scheme")
-    return cognito.verify_jwt(token)
+def check_jwt(user = Depends(verify_jwt)):
+    return user
 
 @router.post("/api/v1/login")
 async def login(request: LoginRequest):
     return await auth.login(request.username, request.password)
 
 @router.post("/api/v2/login")
-async def login(request: LoginRequest):
-    return cognito.authenticate(request.username, request.password)
+def login(request: LoginRequest):
+    auth_response = cognito.authenticate(request.username, request.password)
+    if auth_response:
+        print("auth response received")
+        id_token = auth_response["IdToken"]
+        decoded_token = jwt.decode(id_token, options={"verify_signature": False})
+        
+        email = decoded_token.get("email")
+        user_sub = decoded_token["sub"]
+        put_user(email, request.username, user_sub)
+    return auth_response
 
 @router.post("/api/v1/signup")
 def signup(request: SignupRequest):
-    return cognito.signup(request.username, request.email, request.password)
+    return cognito.signup(request.username, request.email, request.password, request.phoneNumber)
 
 @router.post("/api/v1/confirm_email")
 def confirm_email(request: ConfirmEmailRequest):
