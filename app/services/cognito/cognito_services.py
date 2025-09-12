@@ -28,7 +28,7 @@ def secretHash(clientId, clientSecret, username):
     key = bytes(clientSecret,'utf-8') 
     return base64.b64encode(hmac.new(key, message, digestmod=hashlib.sha256).digest()).decode() 
 
-def signup(username: str, email: str, password: str):
+def signup(username: str, email: str, password: str, phone_number: str):
     client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.sign_up(
@@ -36,7 +36,9 @@ def signup(username: str, email: str, password: str):
             Username=username,
             Password=password,
             SecretHash=secretHash(client_id, client_secret, username),
-            UserAttributes=[{"Name": "email", "Value": email}]
+            UserAttributes=[
+                {"Name": "email", "Value": email},
+                {"Name": "phone_number", "Value": phone_number}]
         )
         return response
     except Exception as e:

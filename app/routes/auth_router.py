@@ -16,6 +16,7 @@ class SignupRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+    phoneNumber: str
 
 class ConfirmEmailRequest(BaseModel):
     username: str
@@ -48,7 +49,7 @@ def login(request: LoginRequest):
 
 @router.post("/api/v1/signup")
 def signup(request: SignupRequest):
-    return cognito.signup(request.username, request.email, request.password)
+    return cognito.signup(request.username, request.email, request.password, request.phoneNumber)
 
 @router.post("/api/v1/confirm_email")
 def confirm_email(request: ConfirmEmailRequest):
