@@ -1,23 +1,19 @@
+import json
 import boto3
 from botocore.exceptions import ClientError
 
+secret_name = "n11592931-cognito-secrets"
+region_name = "ap-southeast-2"
 
 def get_secret():
-    secret_name = "n11592931-cognito-secrets"
-    region_name = "ap-southeast-2"
-
-    session = boto3.session.Session()
-    client = session.client(
+    client = boto3.client(
         service_name='secretsmanager',
         region_name=region_name
     )
-
     try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
+        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        secret = get_secret_value_response.get('SecretString')
+        secret_dict = json.loads(secret)
+        return secret_dict
     except ClientError as e:
-        raise e
-
-    secret = get_secret_value_response['SecretString']
-    print(secret)
+        print(e)

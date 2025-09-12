@@ -8,13 +8,16 @@ from jose import jwt
 from jose.exceptions import JWTError, ExpiredSignatureError
 import hmac, hashlib, base64 
 from pathlib import Path
+from app.services.secrets.secrets_manager import get_secret
 
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-client_id = os.getenv("USERS_COGNITO_CLIENT_ID")
-client_secret = os.getenv("USERS_COGNITO_CLIENT_SECRET")
-user_pool_id = os.getenv("USERS_POOL_ID")
+cognito_secrets = get_secret()
+
+client_id = cognito_secrets["USERS_COGNITO_CLIENT_ID"]
+client_secret = cognito_secrets["USERS_COGNITO_CLIENT_SECRET"]
+user_pool_id = cognito_secrets["USERS_POOL_ID"]
 
 security = HTTPBearer()
 
