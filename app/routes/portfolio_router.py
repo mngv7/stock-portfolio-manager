@@ -3,6 +3,8 @@ import app.controllers.portfolio_controller as pc
 from app.utils.auth import AuthUser
 from pydantic import BaseModel
 from app.services.cognito.cognito_services import verify_jwt
+from app.services.dynamo.trades_table import put_trade
+from app.models.trades_models import Trade
 
 class TradeRequest(BaseModel):
     ticker: str
@@ -26,9 +28,13 @@ def get_portfolio_assets(user = Depends(verify_jwt)):
     # return pc.get_portfolio_assets(user.username)
 
 @router.post("/api/v1/portfolio/trades", status_code=201)
-def log_trade(trade: TradeRequest, user = Depends(verify_jwt)):
-    pass
-    # return pc.log_trade(user.username, trade.ticker, trade.avg_price, trade.quantity, trade.fee, trade.timestamp)
+def log_trade(trade: TradeRequest, user_uuid = Depends(verify_jwt)):
+    trade_object = Trade(trade.ticker,
+                         trade.avg_price,
+                         trade.quantity,
+                         trade.fee,
+                         trade.timestamp)
+    return put_trade(user_uuid["sub"], trade_object)
 
 @router.get("/api/v1/portfolio/trades")
 def get_trade_history(user = Depends(verify_jwt),

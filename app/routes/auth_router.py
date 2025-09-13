@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr
 import app.services.cognito.cognito_services as cognito
 from app.services.cognito.cognito_services import verify_jwt
 from app.services.dynamo.users_table import put_user
+from app.services.dynamo.portfolios_table import put_portfolio
 import jwt
 
 router = APIRouter()
@@ -52,8 +53,9 @@ def challenge_response(request: ChallengeResponse):
         id_token = auth_result.get("IdToken")
         decoded_token = jwt.decode(id_token, options={"verify_signature": False})
         email = decoded_token.get("email")
-        user_sub = decoded_token["sub"]
-        # put_user(email, request.username, user_sub)
+        user_uuid = decoded_token["sub"]
+        put_user(email, request.username, user_uuid)
+        put_portfolio(user_uuid, 1) # Create user's first portfolio
         return {"id_token": id_token}
 
     return {"error": "Challenge not completed"}
