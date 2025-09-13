@@ -1,7 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
 from app.services.dynamo.setup_tables import region, users_table_name, qut_username
-from app.models.users_models import User
 
 dynamodb = boto3.client("dynamodb", region_name=region)
 

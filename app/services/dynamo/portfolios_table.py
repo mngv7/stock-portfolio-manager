@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
-from setup_tables import region, portfolios_table_name, qut_username
+from app.services.dynamo.setup_tables import region, portfolios_table_name, qut_username
 from app.models.portfolio_model import Portfolio
 
 dynamodb = boto3.client("dynamodb", region_name=region)
@@ -23,3 +23,15 @@ def put_portfolio(user_uuid: str, portfolio_no: str):
     except ClientError as e:
         print("PutItem failed:", e)
 
+def load_portfolio_assets(portfolio: Portfolio):
+    portfolio_id = f"{portfolio.user_uuid}#{portfolio.portfolio_no}"
+    response = dynamodb.get_item(
+        TableName=portfolios_table_name,
+        Key={
+            "qut-username": {"S": qut_username},
+            "portfolio_id": {"S": portfolio_id}
+        }
+    )
+    item = response.get("Item")
+    assets = item.get("assets", {}).get("M", {}) if item else {}
+    portfolio.assets = assets
