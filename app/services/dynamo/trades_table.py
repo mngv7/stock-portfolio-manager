@@ -12,7 +12,10 @@ def load_trades(portfolio: Portfolio):
     try:
         response = dynamodb.query(
             TableName=trades_table_name,
-            KeyConditionExpression="qut-username = :pk AND begins_with(trade_id, :prefix)",
+            KeyConditionExpression="#username = :pk AND begins_with(trade_id, :prefix)",
+            ExpressionAttributeNames={
+                "#username": "qut-username"
+            },
             ExpressionAttributeValues={
                 ":pk": {"S": qut_username},
                 ":prefix": {"S": portfolio_id_prefix}
@@ -31,7 +34,7 @@ def load_trades(portfolio: Portfolio):
                 avg_price=float(item["avg_price"]["N"]),
                 quantity=float(item["quantity"]["N"]),
                 fee=float(item["fee"]["N"]),
-                timestamp=item["timestamp"]["S"]
+                timestamp=item["timestamp"]["N"]
             )
 
             # group trades by ticker
@@ -54,6 +57,8 @@ def log_trade_transaction(user_uuid: str, portfolio_no: str, trade: Trade, asset
     # Convert assets dict to DynamoDB format
     dynamo_assets = {ticker: {"N": str(qty)} for ticker, qty in assets.items()}
 
+    print(dynamo_assets)
+
     try:
         response = dynamodb.transact_write_items(
             TransactItems=[
@@ -63,7 +68,7 @@ def log_trade_transaction(user_uuid: str, portfolio_no: str, trade: Trade, asset
                         "Item": {
                             "qut-username": {"S": qut_username},
                             "trade_id": {"S": trade_id},
-                            "timestamp": {"S": trade.timestamp},
+                            "timestamp": {"N": str(trade.timestamp)},
                             "ticker": {"S": trade.ticker},
                             "avg_price": {"N": str(trade.avg_price)},
                             "quantity": {"N": str(trade.quantity)},
