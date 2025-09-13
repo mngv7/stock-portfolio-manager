@@ -20,11 +20,11 @@ def create_users_table():
             TableName=users_table_name,
             AttributeDefinitions=[
                 {"AttributeName": "qut-username", "AttributeType": "S"},
-                {"AttributeName": "email", "AttributeType": "S"},
+                {"AttributeName": "uuid", "AttributeType": "S"},
             ],
             KeySchema=[
                 {"AttributeName": "qut-username", "KeyType": "HASH"},
-                {"AttributeName": "email", "KeyType": "RANGE"},
+                {"AttributeName": "uuid", "KeyType": "RANGE"},
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
@@ -43,11 +43,11 @@ def create_portfolios_table():
             TableName=portfolios_table_name,
             AttributeDefinitions=[
                 {"AttributeName": "qut-username", "AttributeType": "S"},
-                {"AttributeName": "email", "AttributeType": "S"},
+                {"AttributeName": "portfolio_id", "AttributeType": "S"},
             ],
             KeySchema=[
                 {"AttributeName": "qut-username", "KeyType": "HASH"},
-                {"AttributeName": "qut-username", "KeyType": "RANGE"},
+                {"AttributeName": "portfolio_id", "KeyType": "RANGE"},
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
@@ -66,11 +66,11 @@ def create_trades_table():
             TableName=trades_table_name,
             AttributeDefinitions=[
                 {"AttributeName": "qut-username", "AttributeType": "S"},
-                {"AttributeName": "timestamp#email", "AttributeType": "S"},
+                {"AttributeName": "trade_id", "AttributeType": "S"},
             ],
             KeySchema=[
                 {"AttributeName": "qut-username", "KeyType": "HASH"},
-                {"AttributeName": "timestamp#email", "KeyType": "RANGE"},
+                {"AttributeName": "trade_id", "KeyType": "RANGE"},
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
