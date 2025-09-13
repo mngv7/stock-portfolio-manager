@@ -1,9 +1,11 @@
 import boto3
+from boto3.dynamodb.types import TypeDeserializer
 from botocore.exceptions import ClientError
 from app.services.dynamo.setup_tables import region, portfolios_table_name, qut_username
 from app.models.portfolio_model import Portfolio
 
 dynamodb = boto3.client("dynamodb", region_name=region)
+deserializer = TypeDeserializer()
 
 # First time initialization of a portfolio
 def put_portfolio(user_uuid: str, portfolio_no: str):
@@ -33,5 +35,10 @@ def load_portfolio_assets(portfolio: Portfolio):
         }
     )
     item = response.get("Item")
-    assets = item.get("assets", {}).get("M", {}) if item else {}
-    portfolio.assets = assets
+    if not item:
+        portfolio.assets = {}
+        return
+
+    raw_assets = item.get("assets", {}).get("M", {})
+
+    portfolio.assets = deserializer.deserialize({"M": raw_assets})
