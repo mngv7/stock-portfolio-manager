@@ -137,34 +137,35 @@ class Portfolio():
     #     cov_matrix = np.cov(returns_df, rowvar=False)
     #     return cov_matrix
 
-    # def get_portfolio_historical_value(self):
-    #     portfolio_value = pd.Series(dtype=float)
+    def get_portfolio_historical_value(self):
+        portfolio_value = pd.Series(dtype=float)
 
-    #     for ticker in self.assets.keys():
-    #         ticker = ticker.upper()
-    #         stock = yf.Ticker(ticker)
-    #         trade_history = self.trades[ticker]
-    #         trade_history.sort(key=lambda t: t.timestamp)
+        for ticker in self.assets.keys():
+            ticker = ticker.upper()
+            stock = yf.Ticker(ticker)
+            trade_history = self.trades[ticker]
 
-    #         start_dt = datetime.fromtimestamp(trade_history[0].timestamp)
-    #         end_dt = datetime.now()
-    #         data = stock.history(
-    #             start=start_dt.strftime("%Y-%m-%d"),
-    #             end=end_dt.strftime("%Y-%m-%d"),
-    #             interval="1d"
-    #         )
+            trade_history.sort(key=lambda t: t.timestamp)
+            # trade history here are strings
+            start_dt = datetime.fromtimestamp(trade_history[0].timestamp)
+            end_dt = datetime.now()
+            data = stock.history(
+                start=start_dt.strftime("%Y-%m-%d"),
+                end=end_dt.strftime("%Y-%m-%d"),
+                interval="1d"
+            )
 
-    #         prices = data["Close"]
-    #         quantities = pd.Series(0, index=prices.index)
+            prices = data["Close"]
+            quantities = pd.Series(0, index=prices.index)
 
-    #         for trade in trade_history:
-    #             trade_date = datetime.fromtimestamp(trade.timestamp).date()
-    #             quantities.loc[quantities.index.date >= trade_date] += trade.quantity
+            for trade in trade_history:
+                trade_date = datetime.fromtimestamp(trade.timestamp).date()
+                quantities.loc[quantities.index.date >= trade_date] += trade.quantity
 
-    #         ticker_value = prices * quantities
-    #         portfolio_value = portfolio_value.add(ticker_value, fill_value=0)
+            ticker_value = prices * quantities
+            portfolio_value = portfolio_value.add(ticker_value, fill_value=0)
 
-    #     return portfolio_value
+        return portfolio_value
 
     # def get_assets(self) -> dict:
     #     return self.assets

@@ -76,9 +76,11 @@ def delete_trade(trade_id: int, user = Depends(verify_jwt)):
     # return pc.delete_trade(user.username, trade_id)
 
 @router.get("/api/v1/portfolio/value")
-def get_portfolio_historical_value(user = Depends(verify_jwt)):
-    pass
-    # return pc.get_portfolio_historical_value(user.username)
+def get_portfolio_historical_value(user_uuid = Depends(verify_jwt)):
+    portfolio = Portfolio(user_uuid, "1")
+    load_portfolio_assets(portfolio)
+    load_trades(portfolio)
+    return portfolio.get_portfolio_historical_value()
 
 @router.get("/api/v1/portfolio/forecast")
 def get_monte_carlo_forecase(user = Depends(verify_jwt)):

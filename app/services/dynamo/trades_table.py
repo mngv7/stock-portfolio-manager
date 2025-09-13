@@ -34,7 +34,7 @@ def load_trades(portfolio: Portfolio):
                 avg_price=float(item["avg_price"]["N"]),
                 quantity=float(item["quantity"]["N"]),
                 fee=float(item["fee"]["N"]),
-                timestamp=item["timestamp"]["N"]
+                timestamp=int(item["timestamp"]["N"])
             )
 
             # group trades by ticker
