@@ -42,3 +42,5 @@ def load_portfolio_assets(portfolio: Portfolio):
     raw_assets = item.get("assets", {}).get("M", {})
 
     portfolio.assets = deserializer.deserialize({"M": raw_assets})
+    portfolio.assets = [(ticker, int(amount)) for ticker, amount in portfolio.assets]
+
