@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { postTrade } from "../../api/portfolio";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -6,8 +6,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import './LogTrade.css'
+import ReceiptUpload from "./ReceiptUpload";
 
 function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
+    const handleUploadRef = useRef<{handleUpload: () => void}>(null);
     const token = localStorage.getItem("jwt");
     const [ticker, setTicker] = useState("");
     const [price, setPrice] = useState("");
@@ -28,8 +30,10 @@ function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
             };
 
             if (token) {
+                handleUploadRef.current?.handleUpload();
                 await postTrade(token, trade);
             }
+
             setTicker("");
             setPrice("");
             setQuantity("");
@@ -71,20 +75,23 @@ function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
             />
             <br/>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DateTimePicker']}>
-                <DateTimePicker
-                    label="Trade Time"
-                    value={date}
-                    onChange={(e) => setDate(e)}
-                    minTime={dayjs().hour(9).minute(30)}
-                    maxTime={dayjs().hour(16).minute(0)}
-                    shouldDisableDate={(day) => {
-                        const dayOfWeek = day.day();
-                        return dayOfWeek === 0 || dayOfWeek === 6
-                    }}
-                />
-            </DemoContainer>
+            <div className="date-time-picker">
+                <DemoContainer components={['DateTimePicker']}>
+                    <DateTimePicker
+                        label="Trade Time"
+                        value={date}
+                        onChange={(e) => setDate(e)}
+                        minTime={dayjs().hour(9).minute(30)}
+                        maxTime={dayjs().hour(16).minute(0)}
+                        shouldDisableDate={(day) => {
+                            const dayOfWeek = day.day();
+                            return dayOfWeek === 0 || dayOfWeek === 6
+                        }}
+                    />
+                </DemoContainer>
+            </div>
             </LocalizationProvider>
+            <ReceiptUpload ref={handleUploadRef}/>
             <button onClick={logTrade}>Log Trade</button>
         </div>
     );

@@ -100,3 +100,20 @@ export async function getMonteCarloForecast(jwt: string) {
 
     return response.json();
 }
+
+export async function uploadReceipt(jwt: string, receipt_file: FormData) {
+    const response = await fetch(`${API_URL}/api/v1/receipt_upload`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
+        },
+        body: receipt_file
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to upload file.");
+    }
+
+    return "File uploaded!"
+}

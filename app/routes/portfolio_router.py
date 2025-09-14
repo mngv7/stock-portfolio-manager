@@ -90,3 +90,7 @@ def get_monte_carlo_forecase(user_uuid = Depends(verify_jwt)):
     load_portfolio_assets(portfolio)
 
     return pc.calculate_monte_carlo_simulation(portfolio)
+
+@router.post('/api/v1/receipt_upload')
+def receipt_upload(receipt_file: dict, user_uuid = Depends(verify_jwt)):
+    print(receipt_file)
