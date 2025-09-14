@@ -57,13 +57,15 @@ def log_trade(trade_request: TradeRequest, user_uuid = Depends(verify_jwt)):
     return {"message": "Trade logged successfully"}
 
 @router.get("/api/v1/portfolio/trades")
-def get_trade_history(user = Depends(verify_jwt),
+def get_trade_history(user_uuid = Depends(verify_jwt),
                       page_no: int = Query(1, ge=1, description="Page number."),
                       page_size: int = Query(1, ge=1, description="Number of trades per page."),
                       ticker: str = Query(None, description="Filter trades by ticker symbol."),
                       sort_order: str = Query(None, description="Sort by ascending, descending, or none.")):
-    pass
-    # return pc.get_trade_history(user.username, page_no, page_size, ticker, sort_order)
+    portfolio = Portfolio(user_uuid, "1")
+    load_trades(portfolio)
+
+    return pc.get_trade_history(portfolio, page_no, page_size, ticker, sort_order)
 
 @router.put("/api/v1/portfolio/trades/{trade_id}")
 def update_trade(trade_id: int, trade: TradeRequest, user = Depends(verify_jwt)):

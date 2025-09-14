@@ -167,8 +167,8 @@ class Portfolio():
 
         return portfolio_value
 
-    # def get_assets(self) -> dict:
-    #     return self.assets
+    def get_assets(self) -> dict:
+        return self.assets
 
-    # def get_trades(self) -> dict[str, list[Trade]]:
-    #     return self.trades
+    def get_trades(self) -> dict[str, list[Trade]]:
+        return self.trades

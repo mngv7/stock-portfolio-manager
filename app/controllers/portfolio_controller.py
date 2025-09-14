@@ -1,6 +1,7 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from app.utils.users import users
 from app.models.trades_models import Trade
+from app.models.portfolio_model import Portfolio
 
 def get_portfolio_assets(username: str):
     if username not in users:
@@ -15,11 +16,8 @@ def log_trade(username: str, ticker: str, avg_price: float, quantity: int, fee: 
     users[username].portfolio.apply_trade(trade)
     return {"message": "Trade successfully logged!"}
 
-def get_trade_history(username: str, page_no: int = 1, page_size: int = 10, ticker: str = None, sort_order: str = "desc"):
-    if username not in users:
-        raise HTTPException(status_code=404, detail=f'{username} not found')
-    
-    trades = users[username].portfolio.get_trades()
+def get_trade_history(portfolio: Portfolio, page_no: int = 1, page_size: int = 10, ticker: str = None, sort_order: str = "desc"):    
+    trades = portfolio.get_trades()
 
     if ticker:
         ticker = ticker.upper()
