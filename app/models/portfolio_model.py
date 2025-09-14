@@ -6,12 +6,13 @@ import pandas as pd
 from datetime import datetime
 
 class Portfolio():
-    def __init__(self, email) -> None:
-        self.email = email
-        self.assets = {}
+    def __init__(self, user_uuid: str, portfolio_no: str) -> None:
+        self.user_uuid = user_uuid
+        self.portfolio_no = portfolio_no
+        self.portfolio_id = f"{user_uuid}#{portfolio_no}"
+
+        self.assets: dict[str, int] = {}
         self.trades: dict[str, list[Trade]] = {}
-        self.trade_index: dict[int, Trade] = {}
-        self.next_trade_id = 1
 
     def apply_trade(self, trade: Trade) -> None:
         ticker = trade.ticker
@@ -20,51 +21,49 @@ class Portfolio():
             self.assets[ticker] = self.assets.get(ticker, 0) + trade.quantity
         elif trade.quantity < 0:  # Sell order
             if ticker not in self.assets:
-                raise InvalidTradeError("Invalid trade!")
+                raise InvalidTradeError("Invalid trade! Cannot sell what you don't own.")
 
             new_quantity = self.assets[ticker] + trade.quantity
             if new_quantity < 0:
-                raise InvalidTradeError("Invalid trade!")
+                raise InvalidTradeError("Invalid trade! Not enough shares to sell.")
             elif new_quantity == 0:
                 del self.assets[ticker]
             else:
                 self.assets[ticker] = new_quantity
         else:
-            raise InvalidTradeError("Invalid trade!")
+            raise InvalidTradeError("Invalid trade! Quantity cannot be zero.")
 
         if ticker not in self.trades:
             self.trades[ticker] = []
-        trade_id = self.next_trade_id
-        self.next_trade_id += 1
-        self.trade_index[trade_id] = trade
-        trade.id = trade_id
+        
         self.trades[ticker].append(trade)
 
-    def update_trade(self, trade_id: int, ticker: str, avg_price: float, quantity: int, fee: float, timestamp: int):
-        if trade_id not in self.trade_index:
-            return None
-        trade = self.trade_index[trade_id]
-        trade.ticker = ticker
-        trade.avg_price = avg_price
-        trade.quantity = quantity
-        trade.fee = fee
-        trade.timestamp = timestamp
-        return {
-            "id": trade_id,
-            "ticker": ticker,
-            "avg_price": avg_price,
-            "quantity": quantity,
-            "fee": fee,
-            "timestamp": timestamp
-        }
 
-    def delete_trade(self, trade_id: int):
-        if trade_id not in self.trade_index:
-            return False
-        trade = self.trade_index.pop(trade_id)
-        if trade.ticker in self.trades:
-            self.trades[trade.ticker] = [t for t in self.trades[trade.ticker] if getattr(t, "id", None) != trade_id]
-        return True
+    # def update_trade(self, trade_id: int, ticker: str, avg_price: float, quantity: int, fee: float, timestamp: int):
+    #     if trade_id not in self.trade_index:
+    #         return None
+    #     trade = self.trade_index[trade_id]
+    #     trade.ticker = ticker
+    #     trade.avg_price = avg_price
+    #     trade.quantity = quantity
+    #     trade.fee = fee
+    #     trade.timestamp = timestamp
+    #     return {
+    #         "id": trade_id,
+    #         "ticker": ticker,
+    #         "avg_price": avg_price,
+    #         "quantity": quantity,
+    #         "fee": fee,
+    #         "timestamp": timestamp
+    #     }
+
+    # def delete_trade(self, trade_id: int):
+    #     if trade_id not in self.trade_index:
+    #         return False
+    #     trade = self.trade_index.pop(trade_id)
+    #     if trade.ticker in self.trades:
+    #         self.trades[trade.ticker] = [t for t in self.trades[trade.ticker] if getattr(t, "id", None) != trade_id]
+    #     return True
 
     def get_portfolio_weights(self) -> dict:
         result = {}
@@ -104,7 +103,7 @@ class Portfolio():
 
         for sim in range(simulations):
             portfolio_value = 1.0
-            for day in range(days):
+            for _ in range(days):
                 rand_normals = np.random.normal(size=len(self.assets))
                 correlated_returns = mean_vector / days + (chol_decomp @ rand_normals) / np.sqrt(days)
                 portfolio_daily_return = correlated_returns @ portfolio_weights
@@ -143,8 +142,9 @@ class Portfolio():
             ticker = ticker.upper()
             stock = yf.Ticker(ticker)
             trade_history = self.trades[ticker]
-            trade_history.sort(key=lambda t: t.timestamp)
 
+            trade_history.sort(key=lambda t: t.timestamp)
+            # trade history here are strings
             start_dt = datetime.fromtimestamp(trade_history[0].timestamp)
             end_dt = datetime.now()
             data = stock.history(

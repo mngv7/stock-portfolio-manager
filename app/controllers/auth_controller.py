@@ -1,6 +1,5 @@
 from fastapi import Request, HTTPException
 from app.utils.auth import generate_access_token
-from app.models.users_models import User 
 from app.utils.users import users
 
 async def login(username: str, password: str):
