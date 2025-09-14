@@ -85,6 +85,8 @@ def get_portfolio_historical_value(user_uuid = Depends(verify_jwt)):
     return portfolio.get_portfolio_historical_value()
 
 @router.get("/api/v1/portfolio/forecast")
-def get_monte_carlo_forecase(user = Depends(verify_jwt)):
-    pass
-    # return pc.calculate_monte_carlo_simulation(user.username)
+def get_monte_carlo_forecase(user_uuid = Depends(verify_jwt)):
+    portfolio = Portfolio(user_uuid, "1")
+    load_portfolio_assets(portfolio)
+
+    return pc.calculate_monte_carlo_simulation(portfolio)

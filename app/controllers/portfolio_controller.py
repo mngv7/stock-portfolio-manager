@@ -66,7 +66,5 @@ def get_portfolio_historical_value(username: str):
     
     return users[username].portfolio.get_portfolio_historical_value()
 
-def calculate_monte_carlo_simulation(username: str):
-    if username not in users:
-        raise HTTPException(status_code=404, detail=f'{username} not found')
-    return users[username].portfolio.monte_carlo_forecast()
+def calculate_monte_carlo_simulation(portfolio: Portfolio):
+    return portfolio.monte_carlo_forecast()

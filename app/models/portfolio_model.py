@@ -14,8 +14,6 @@ class Portfolio():
         self.assets: dict[str, int] = {}
         self.trades: dict[str, list[Trade]] = {}
 
-        # self.trade_index: dict[int, Trade] = {}
-
     def apply_trade(self, trade: Trade) -> None:
         ticker = trade.ticker
 
@@ -67,75 +65,75 @@ class Portfolio():
     #         self.trades[trade.ticker] = [t for t in self.trades[trade.ticker] if getattr(t, "id", None) != trade_id]
     #     return True
 
-    # def get_portfolio_weights(self) -> dict:
-    #     result = {}
-    #     total_value = 0
-    #     for ticker, amount in self.assets.items():
-    #         try:
-    #             asset = yf.Ticker(ticker)
-    #         except:
-    #             print("Not a valid ticker.")
-    #         asset_price = asset.info['currentPrice']
-    #         asset_volume = asset_price * amount
-    #         total_value += asset_volume
-    #         result[ticker] = asset_volume
+    def get_portfolio_weights(self) -> dict:
+        result = {}
+        total_value = 0
+        for ticker, amount in self.assets.items():
+            try:
+                asset = yf.Ticker(ticker)
+            except:
+                print("Not a valid ticker.")
+            asset_price = asset.info['currentPrice']
+            asset_volume = asset_price * amount
+            total_value += asset_volume
+            result[ticker] = asset_volume
 
-    #     for ticker, volume in result.items():
-    #         result[ticker] = volume / total_value
+        for ticker, volume in result.items():
+            result[ticker] = volume / total_value
 
-    #     return result
+        return result
 
-    # def monte_carlo_forecast(self, simulations=50000, time_frame="1y", days=252) -> dict:
-    #     if len(self.assets.keys()) < 2:
-    #         return {}
+    def monte_carlo_forecast(self, simulations=50000, time_frame="1y", days=252) -> dict:
+        if len(self.assets.keys()) < 2:
+            return {}
 
-    #     portfolio_weights = np.array([self.get_portfolio_weights()[ticker] for ticker in self.assets.keys()])
-    #     cov_matrix = self.get_portfolio_cov()
-    #     mean_return = {}
+        portfolio_weights = np.array([self.get_portfolio_weights()[ticker] for ticker in self.assets.keys()])
+        cov_matrix = self.get_portfolio_cov()
+        mean_return = {}
 
-    #     for ticker in self.assets.keys():
-    #         asset = yf.Ticker(ticker)
-    #         historical_prices = asset.history(period=time_frame)['Close']
-    #         returns = historical_prices.pct_change().dropna()
-    #         mean_return[ticker] = returns.mean() * 252
+        for ticker in self.assets.keys():
+            asset = yf.Ticker(ticker)
+            historical_prices = asset.history(period=time_frame)['Close']
+            returns = historical_prices.pct_change().dropna()
+            mean_return[ticker] = returns.mean() * 252
 
-    #     mean_vector = np.array([mean_return[ticker] for ticker in self.assets.keys()])
-    #     chol_decomp = np.linalg.cholesky(cov_matrix)
-    #     portfolio_returns = np.zeros(simulations)
+        mean_vector = np.array([mean_return[ticker] for ticker in self.assets.keys()])
+        chol_decomp = np.linalg.cholesky(cov_matrix)
+        portfolio_returns = np.zeros(simulations)
 
-    #     for sim in range(simulations):
-    #         portfolio_value = 1.0
-    #         for day in range(days):
-    #             rand_normals = np.random.normal(size=len(self.assets))
-    #             correlated_returns = mean_vector / days + (chol_decomp @ rand_normals) / np.sqrt(days)
-    #             portfolio_daily_return = correlated_returns @ portfolio_weights
-    #             portfolio_value *= (1 + portfolio_daily_return)
-    #         portfolio_returns[sim] = portfolio_value - 1
+        for sim in range(simulations):
+            portfolio_value = 1.0
+            for _ in range(days):
+                rand_normals = np.random.normal(size=len(self.assets))
+                correlated_returns = mean_vector / days + (chol_decomp @ rand_normals) / np.sqrt(days)
+                portfolio_daily_return = correlated_returns @ portfolio_weights
+                portfolio_value *= (1 + portfolio_daily_return)
+            portfolio_returns[sim] = portfolio_value - 1
 
-    #     expected_return = np.mean(portfolio_returns)
-    #     volatility = np.std(portfolio_returns)
-    #     percentile_5 = np.percentile(portfolio_returns, 5)
-    #     percentile_95 = np.percentile(portfolio_returns, 95)
-    #     var_95 = np.percentile(portfolio_returns, 5)
+        expected_return = np.mean(portfolio_returns)
+        volatility = np.std(portfolio_returns)
+        percentile_5 = np.percentile(portfolio_returns, 5)
+        percentile_95 = np.percentile(portfolio_returns, 95)
+        var_95 = np.percentile(portfolio_returns, 5)
 
-    #     return {
-    #         "expected_return": float(expected_return),
-    #         "volatility": float(volatility),
-    #         "5th_percentile": float(percentile_5),
-    #         "95th_percentile": float(percentile_95),
-    #         "VaR_95": float(var_95),
-    #         "distribution": portfolio_returns.tolist()
-    #     }
+        return {
+            "expected_return": float(expected_return),
+            "volatility": float(volatility),
+            "5th_percentile": float(percentile_5),
+            "95th_percentile": float(percentile_95),
+            "VaR_95": float(var_95),
+            "distribution": portfolio_returns.tolist()
+        }
 
-    # def get_portfolio_cov(self):
-    #     returns_dict = {}
-    #     for ticker in self.assets.keys():
-    #         asset = yf.Ticker(ticker)
-    #         historical_prices = asset.history(period="1y")['Close']
-    #         returns_dict[ticker] = historical_prices.pct_change().dropna()
-    #     returns_df = pd.DataFrame(returns_dict)
-    #     cov_matrix = np.cov(returns_df, rowvar=False)
-    #     return cov_matrix
+    def get_portfolio_cov(self):
+        returns_dict = {}
+        for ticker in self.assets.keys():
+            asset = yf.Ticker(ticker)
+            historical_prices = asset.history(period="1y")['Close']
+            returns_dict[ticker] = historical_prices.pct_change().dropna()
+        returns_df = pd.DataFrame(returns_dict)
+        cov_matrix = np.cov(returns_df, rowvar=False)
+        return cov_matrix
 
     def get_portfolio_historical_value(self):
         portfolio_value = pd.Series(dtype=float)
