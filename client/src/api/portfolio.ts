@@ -105,7 +105,6 @@ export async function uploadReceipt(jwt: string, receipt_file: FormData) {
     const response = await fetch(`${API_URL}/api/v1/receipt_upload`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${jwt}`,
         },
         body: receipt_file

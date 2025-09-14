@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Query, UploadFile, File
 import app.controllers.portfolio_controller as pc
 from app.utils.auth import AuthUser
 from pydantic import BaseModel
@@ -92,5 +92,7 @@ def get_monte_carlo_forecase(user_uuid = Depends(verify_jwt)):
     return pc.calculate_monte_carlo_simulation(portfolio)
 
 @router.post('/api/v1/receipt_upload')
-def receipt_upload(receipt_file: dict, user_uuid = Depends(verify_jwt)):
-    print(receipt_file)
+def receipt_upload(receipt_file: UploadFile = File(...), user_uuid = Depends(verify_jwt)):
+    print(receipt_file.filename)
+    contents = receipt_file.file.read()
+    return {"filename": receipt_file.filename, "size": len(contents)}

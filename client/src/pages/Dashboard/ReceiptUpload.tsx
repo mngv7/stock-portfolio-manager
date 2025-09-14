@@ -19,7 +19,7 @@ const ReceiptUpload = forwardRef((_, ref) => {
             if (!jwt || !selectedFile) return;
 
             const formData = new FormData();
-            formData.append('demo[]', selectedFile);
+            formData.append('receipt_file', selectedFile);
 
             const response = await uploadReceipt(jwt, formData);
             console.log(response);
