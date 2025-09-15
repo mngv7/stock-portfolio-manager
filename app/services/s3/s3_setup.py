@@ -10,12 +10,19 @@ s3_client = boto3.client("s3", region_name=region)
 
 def create_receipts_bucket():
     try:
-        response = s3_client.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={'LocationConstraint': region})
-        print('Bucket created at:', response.get('Location'))
-    except ClientError as e:
-        print(e)
+        s3_client.head_bucket(Bucket=bucket_name)
+        print(f"Bucket '{bucket_name}' already exists.")
+    except ClientError as e1:
+        error_code = int(e1.response['Error']['Code'])
+        if error_code == 404:
+            try:
+                response = s3_client.create_bucket(Bucket=bucket_name,
+                                                   CreateBucketConfiguration={'LocationConstraint': region})
+                print('Bucket created at:', response.get('Location'))
+            except Exception as e2:
+                print(f"Failed to create bucket: {e2}")
+        else:
+            print(f"An error occured: {e1}")
 
 def tag_bucket():
     try:

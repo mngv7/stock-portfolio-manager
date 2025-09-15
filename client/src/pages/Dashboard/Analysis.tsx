@@ -10,7 +10,7 @@ function Analysis() {
     const [fifthPercentile, setFifthPercentile] = useState(0);
     const [ninetyFifthPercentile, setNinetyFifthPercentile] = useState(0);
     const [var95, setVar95] = useState(0);
-    const [distribution, setDistribution] = useState<number[]>([]);
+    const [_, setDistribution] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {

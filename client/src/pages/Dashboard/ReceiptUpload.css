@@ -1,0 +1,25 @@
+.upload-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+    width: 91%;
+}
+
+.upload-card p {
+    font-weight: bold;
+}
+
+.choose-btn {
+    gap: 10px;
+    background-color: #3f5a36;
+    color: white;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+.choose-btn:hover {
+    background-color: #3b7d3f; /* slightly lighter green */
+    transform: translateY(-1px)
+}

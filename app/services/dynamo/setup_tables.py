@@ -56,6 +56,7 @@ def create_portfolios_table():
         print(e)
 
 def create_trades_table():
+    # What is trade_id?
     existing_tables = dynamodb.list_tables()['TableNames']
     if trades_table_name in existing_tables:
         print(f"Table '{trades_table_name}' already exists.")
