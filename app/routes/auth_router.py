@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+import requests
 import app.controllers.auth_controller as auth
 from pydantic import BaseModel, EmailStr
 import app.services.cognito.cognito_services as cognito
@@ -7,6 +9,7 @@ from app.services.dynamo.users_table import put_user
 from app.services.dynamo.portfolios_table import put_portfolio
 import jwt
 
+GOOGLE_CLIENT_ID = "1012963124694-v84tliahtescq2oq29kh4vadcjgt1022.apps.googleusercontent.com"
 router = APIRouter()
 
 class LoginRequest(BaseModel):
@@ -67,3 +70,9 @@ def signup(request: SignupRequest):
 @router.post("/api/v1/confirm_email")
 def confirm_email(request: ConfirmEmailRequest):
     return cognito.confirm(request.username, request.confirmationCode)
+
+@router.post("/auth/google")
+async def google_login(request: Request):
+    data = await request.json()
+    id_token = data.get("credential")
+    print(id_token)

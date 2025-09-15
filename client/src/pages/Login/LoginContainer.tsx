@@ -3,6 +3,7 @@ import './LoginContainer.css'
 import { login } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
 import LoginChallengeContainer from './LoginChallengeContainer';
+import GoogleLogin from './GoogleLogin';
 
 function LoginContainer() {
     const [username, setUsername] = useState('');
@@ -58,6 +59,7 @@ function LoginContainer() {
                 <button className='login-button' onClick={handleLogin}>
                     Login
                 </button>
+                <GoogleLogin />
                 <button className='login-button' onClick={handleSignUp}>
                     Sign Up
                 </button>

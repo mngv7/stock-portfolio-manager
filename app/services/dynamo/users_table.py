@@ -19,4 +19,3 @@ def put_user(email: str, username: str, user_uuid: str):
         print("PutItem response:", response)
     except ClientError as e:
         print(e)
-
