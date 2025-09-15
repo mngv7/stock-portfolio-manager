@@ -10,6 +10,7 @@ export type ReceiptUploadHandle = {
 
 const ReceiptUpload = forwardRef<ReceiptUploadHandle>((_, ref) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const fileUploadRef = useRef<FileUpload>(null);
 
     const toast = useRef<Toast>(null);
     const jwt = localStorage.getItem("jwt");
@@ -27,6 +28,7 @@ const ReceiptUpload = forwardRef<ReceiptUploadHandle>((_, ref) => {
             toast.current?.show({ severity: 'success', summary: 'Uploaded', detail: selectedFile.name });
 
             setSelectedFile(null);
+            fileUploadRef.current?.clear();
         },
     }));
 
@@ -35,6 +37,7 @@ const ReceiptUpload = forwardRef<ReceiptUploadHandle>((_, ref) => {
             <Toast ref={toast}></Toast>
             <p>Upload trade receipt</p>
             <FileUpload
+                ref={fileUploadRef}
                 mode='basic'
                 name="demo[]"
                 accept="application/pdf"
