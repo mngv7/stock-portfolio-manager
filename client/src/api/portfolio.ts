@@ -102,7 +102,7 @@ export async function getMonteCarloForecast(jwt: string) {
 }
 
 export async function uploadReceipt(jwt: string, receipt_file: FormData) {
-    const response = await fetch(`${API_URL}/api/v1/receipt_upload`, {
+    const response = await fetch(`${API_URL}/api/v1/receipt`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${jwt}`,

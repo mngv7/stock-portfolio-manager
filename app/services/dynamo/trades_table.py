@@ -3,6 +3,7 @@ from botocore.exceptions import ClientError
 from app.services.dynamo.setup_tables import region, trades_table_name, qut_username, portfolios_table_name
 from app.models.trades_models import Trade
 from app.models.portfolio_model import Portfolio
+from app.utils.gen_id import generate_trade_id, generate_portfolio_id
 
 dynamodb = boto3.client("dynamodb", region_name=region)
 
@@ -51,8 +52,8 @@ def log_trade_transaction(user_uuid: str, portfolio_no: str, trade: Trade, asset
     Atomically logs a trade and updates portfolio assets using DynamoDB transaction.
     """
 
-    trade_id = f"{user_uuid}#{trade.timestamp}"
-    portfolio_id = f"{user_uuid}#{portfolio_no}"
+    trade_id = generate_trade_id(user_uuid, trade.timestamp, trade.ticker)
+    portfolio_id = generate_portfolio_id(user_uuid)
 
     # Convert assets dict to DynamoDB format
     dynamo_assets = {ticker: {"N": str(qty)} for ticker, qty in assets.items()}

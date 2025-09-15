@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, File
 import app.controllers.portfolio_controller as pc
-from app.utils.auth import AuthUser
+from app.utils.gen_id import generate_trade_id
 from pydantic import BaseModel
 from app.services.cognito.cognito_services import verify_jwt
 from app.services.dynamo.trades_table import load_trades, log_trade_transaction
@@ -9,6 +9,8 @@ from app.models.trades_models import Trade
 from app.models.portfolio_model import Portfolio
 from app.utils.exceptions import InvalidTradeError
 from botocore.exceptions import ClientError
+from app.services.s3 import receipts_bucket
+
 class TradeRequest(BaseModel):
     ticker: str
     avg_price: float
@@ -91,8 +93,12 @@ def get_monte_carlo_forecase(user_uuid = Depends(verify_jwt)):
 
     return pc.calculate_monte_carlo_simulation(portfolio)
 
-@router.post('/api/v1/receipt_upload')
-def receipt_upload(receipt_file: UploadFile = File(...), user_uuid = Depends(verify_jwt)):
-    print(receipt_file.filename)
-    contents = receipt_file.file.read()
-    return {"filename": receipt_file.filename, "size": len(contents)}
+@router.post('/api/v1/receipt')
+async def receipt_upload(receipt_file: UploadFile = File(...), trade: TradeRequest = Depends(), user_uuid = Depends(verify_jwt)):
+    trade_id = generate_trade_id(user_uuid, trade.timestamp, trade.ticker)
+    pdf_contents = await receipt_file.file.read()
+    return receipts_bucket.write_receipts(trade_id, pdf_contents)
+
+@router.get('/api/v1/receipt')
+def fetch_receipt(trade_id: str, user_uuid = Depends(verify_jwt)):
+    pass
