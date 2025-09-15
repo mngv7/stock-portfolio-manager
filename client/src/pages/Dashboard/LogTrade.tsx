@@ -7,9 +7,10 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import './LogTrade.css'
 import ReceiptUpload from "./ReceiptUpload";
+import type { ReceiptUploadHandle } from "./ReceiptUpload";
 
 function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
-    const handleUploadRef = useRef<{handleUpload: () => void}>(null);
+    const handleUploadRef = useRef<ReceiptUploadHandle>(null);
     const token = localStorage.getItem("jwt");
     const [ticker, setTicker] = useState("");
     const [price, setPrice] = useState("");
@@ -30,7 +31,7 @@ function LogTrade({ handleLogTrade }: { handleLogTrade: () => void}) {
             };
 
             if (token) {
-                handleUploadRef.current?.handleUpload();
+                handleUploadRef.current?.handleUpload(trade);
                 await postTrade(token, trade);
             }
 

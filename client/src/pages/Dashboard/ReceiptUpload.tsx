@@ -2,9 +2,13 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { FileUpload, type FileUploadSelectEvent } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import './ReceiptUpload.css'
-import { uploadReceipt } from '../../api/portfolio';
+import { uploadReceipt, type Trade } from '../../api/portfolio';
 
-const ReceiptUpload = forwardRef((_, ref) => {
+export type ReceiptUploadHandle = {
+    handleUpload: (trade: Trade) => Promise<void>;
+};
+
+const ReceiptUpload = forwardRef<ReceiptUploadHandle>((_, ref) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const toast = useRef<Toast>(null);
@@ -15,13 +19,10 @@ const ReceiptUpload = forwardRef((_, ref) => {
     };
 
     useImperativeHandle(ref, () => ({
-        handleUpload: async () => {
+        handleUpload: async (trade: Trade) => {
             if (!jwt || !selectedFile) return;
 
-            const formData = new FormData();
-            formData.append('receipt_file', selectedFile);
-
-            const response = await uploadReceipt(jwt, formData);
+            const response = await uploadReceipt(selectedFile, trade, jwt);
             console.log(response);
             toast.current?.show({ severity: 'success', summary: 'Uploaded', detail: selectedFile.name });
 
@@ -36,7 +37,7 @@ const ReceiptUpload = forwardRef((_, ref) => {
             <FileUpload
                 mode='basic'
                 name="demo[]"
-                accept="image/*"
+                accept="application/pdf"
                 maxFileSize={1000000}
                 customUpload
                 onSelect={handleFileSelect}
