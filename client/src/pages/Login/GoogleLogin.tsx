@@ -2,7 +2,7 @@ const API_URL = import.meta.env.VITE_BUILD_ENV;
 
 function GoogleLogin() {
     const clientId = "1012963124694-v84tliahtescq2oq29kh4vadcjgt1022.apps.googleusercontent.com"
-    const loginUri = `http://${API_URL}/auth/google`;
+    const loginUri = `https://${API_URL}/auth/google`;
 
     return(
         <div>

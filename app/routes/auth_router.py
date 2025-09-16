@@ -39,10 +39,6 @@ def check_jwt(user = Depends(verify_jwt)):
 def check_jwt(user = Depends(verify_jwt)):
     return user
 
-@router.post("/api/v1/login")
-async def login(request: LoginRequest):
-    return await auth.login(request.username, request.password)
-
 @router.post("/api/v2/login")
 def login(request: LoginRequest):
     return cognito.authenticate(request.username, request.password)
