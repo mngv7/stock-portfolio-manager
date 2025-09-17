@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from pymemcache.client.base import Client
 from app.services.parameter_store.parameter_store import fetch_parameter_local
+import re
 
 MEMCACHED_ENDPOINT = fetch_parameter_local("/n11592931/memcached/endpoint")
 CACHE_TTL = 3600
@@ -25,7 +26,9 @@ class CachedTicker:
         return data
 
     def history(self, *args, **kwargs):
-        key = f"{self.symbol}:history:{args}:{kwargs}"
+        raw_key = f"{self.symbol}:history:{args}:{kwargs}"
+        key = re.sub(r"\s+", "", raw_key)
+
         value = memcached_client.get(key)
         if value:
             return pd.DataFrame(json.loads(value.decode("utf-8")))
