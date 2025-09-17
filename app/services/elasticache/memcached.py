@@ -4,6 +4,7 @@ import pandas as pd
 from pymemcache.client.base import Client
 from app.services.parameter_store.parameter_store import fetch_parameter_local
 import re
+import io
 
 MEMCACHED_ENDPOINT = fetch_parameter_local("/n11592931/memcached/endpoint")
 CACHE_TTL = 3600
@@ -31,8 +32,13 @@ class CachedTicker:
 
         value = memcached_client.get(key)
         if value:
-            return pd.DataFrame(json.loads(value.decode("utf-8")))
-        
+            df = pd.read_json(io.StringIO(value.decode("utf-8")))
+            if not isinstance(df.index, pd.DatetimeIndex):
+                df.index = pd.to_datetime(df.index)
+            return df
+
+        # Cache miss
         df = self._ticker.history(*args, **kwargs)
         memcached_client.set(key, df.to_json().encode("utf-8"), expire=CACHE_TTL)
         return df
+
