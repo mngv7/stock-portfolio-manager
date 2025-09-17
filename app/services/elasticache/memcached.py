@@ -9,24 +9,27 @@ CACHE_TTL = 3600
 
 memcached_client = Client(MEMCACHED_ENDPOINT)
 
-def ticker_cached_fetch(ticker: str):
-    try:
-        value = memcached_client.get(ticker)
-    except Exception as e:
-        print(f"Memcached error: {e}")
+class CachedTicker:
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+        self._ticker = yf.Ticker(symbol)
+    
+    @property
+    def info(self):
+        value = memcached_client.get(f"{self.symbol}:info")
+        if value:
+            return json.loads(value.decode("utf-8"))
+        
+        data = self._ticker.info
+        memcached_client.set(f"{self.symbol}:info", json.dumps(data, allow_nan=False).encode("utf-8"), expire=CACHE_TTL)
+        return data
 
-    if value:
-        return value.decode('utf-8')
-
-    response = yf.Ticker(ticker)
-
-    data = response.info
-    fetched_value = json.dumps(data, allow_nan=False).encode("utf-8")
-
-    memcached_client.set(ticker, fetched_value, expire=CACHE_TTL)
-
-    return fetched_value
-
-
-if __name__ == "__main__":
-    ticker_cached_fetch("AAPL")
+    def history(self, *args, **kwargs):
+        key = f"{self.symbol}:history:{args}:{kwargs}"
+        value = memcached_client.get(key)
+        if value:
+            return pd.DataFrame(json.loads(value.decode("utf-8")))
+        
+        df = self._ticker.history(*args, **kwargs)
+        memcached_client.set(key, df.to_json().encode("utf-8"), expire=CACHE_TTL)
+        return df
