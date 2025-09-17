@@ -32,13 +32,19 @@ class CachedTicker:
 
         value = memcached_client.get(key)
         if value:
-            df = pd.read_json(io.StringIO(value.decode("utf-8")))
-            if not isinstance(df.index, pd.DatetimeIndex):
-                df.index = pd.to_datetime(df.index)
+            df = pd.read_json(io.StringIO(value.decode("utf-8")), convert_dates=True)
+            # Ensure tz-aware DatetimeIndex
+            if isinstance(df.index, pd.DatetimeIndex) and df.index.tz is None:
+                df.index = df.index.tz_localize('UTC')  # or 'America/New_York' if you want yfinance's original tz
             return df
 
         # Cache miss
         df = self._ticker.history(*args, **kwargs)
-        memcached_client.set(key, df.to_json().encode("utf-8"), expire=CACHE_TTL)
+        memcached_client.set(
+            key,
+            df.to_json(date_format='iso').encode("utf-8"),
+            expire=CACHE_TTL
+        )
         return df
+
 
