@@ -104,7 +104,7 @@ def verify_jwt(credentials: HTTPAuthorizationCredentials = Depends(security)):
             audience=client_id,
             issuer=f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}"
         )
-        return payload["sub"]
+        return payload
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:

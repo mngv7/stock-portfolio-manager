@@ -30,11 +30,11 @@ class ChallengeResponse(BaseModel):
 
 @router.post('/api/v1/auth')
 def check_jwt(user = Depends(verify_jwt)):
-    return user
+    return user["sub"]
 
 @router.post("/api/v2/auth")
 def check_jwt(user = Depends(verify_jwt)):
-    return user
+    return user["sub"]
 
 @router.post("/api/v1/login")
 async def login(request: LoginRequest):
