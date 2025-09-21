@@ -1,9 +1,9 @@
 from app.models.trades_models import Trade
 from app.utils.exceptions import InvalidTradeError
-import yfinance as yf
 import numpy as np
 import pandas as pd
 from datetime import datetime
+from app.services.elasticache.memcached import CachedTicker
 
 class Portfolio():
     def __init__(self, user_uuid: str, portfolio_no: str) -> None:
@@ -70,7 +70,7 @@ class Portfolio():
         total_value = 0
         for ticker, amount in self.assets.items():
             try:
-                asset = yf.Ticker(ticker)
+                asset = CachedTicker(ticker)
             except:
                 print("Not a valid ticker.")
             asset_price = asset.info['currentPrice']
@@ -92,7 +92,7 @@ class Portfolio():
         mean_return = {}
 
         for ticker in self.assets.keys():
-            asset = yf.Ticker(ticker)
+            asset = CachedTicker(ticker)
             historical_prices = asset.history(period=time_frame)['Close']
             returns = historical_prices.pct_change().dropna()
             mean_return[ticker] = returns.mean() * 252
@@ -128,7 +128,7 @@ class Portfolio():
     def get_portfolio_cov(self):
         returns_dict = {}
         for ticker in self.assets.keys():
-            asset = yf.Ticker(ticker)
+            asset = CachedTicker(ticker)
             historical_prices = asset.history(period="1y")['Close']
             returns_dict[ticker] = historical_prices.pct_change().dropna()
         returns_df = pd.DataFrame(returns_dict)
@@ -140,7 +140,7 @@ class Portfolio():
 
         for ticker in self.assets.keys():
             ticker = ticker.upper()
-            stock = yf.Ticker(ticker)
+            stock = CachedTicker(ticker)
             trade_history = self.trades[ticker]
 
             trade_history.sort(key=lambda t: t.timestamp)
