@@ -28,17 +28,13 @@ class ChallengeResponse(BaseModel):
     authCode: str
     session: str
 
-@router.post('/api/v1/auth')
-def check_jwt(user = Depends(verify_jwt)):
-    return user["sub"]
-
 @router.post("/api/v2/auth")
 def check_jwt(user = Depends(verify_jwt)):
     return user["sub"]
 
-@router.post("/api/v1/login")
-async def login(request: LoginRequest):
-    return await auth.login(request.username, request.password)
+@router.get("/api/v1/jwt/decode")
+def decode_jwt(user = Depends(verify_jwt)):
+    return user
 
 @router.post("/api/v2/login")
 def login(request: LoginRequest):
