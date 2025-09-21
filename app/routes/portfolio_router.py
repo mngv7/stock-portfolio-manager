@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, UploadFile, File, Form
+from fastapi import APIRouter, Depends, Query, UploadFile, File, Form, HTTPException, status
 import app.controllers.portfolio_controller as pc
 from app.utils.gen_id import generate_trade_id
 from pydantic import BaseModel
@@ -93,11 +93,17 @@ def get_portfolio_historical_value(user = Depends(verify_jwt)):
 
 @router.get("/api/v1/portfolio/forecast")
 def get_monte_carlo_forecase(user = Depends(verify_jwt)):
-    user_uuid = user["sub"]
-    portfolio = Portfolio(user_uuid, "1")
-    load_portfolio_assets(portfolio)
+    groups = user.get("cognito:groups", [])
+    if "premium-user" in groups:
+        user_uuid = user["sub"]
+        portfolio = Portfolio(user_uuid, "1")
+        load_portfolio_assets(portfolio)
 
-    return pc.calculate_monte_carlo_simulation(portfolio)
+        return pc.calculate_monte_carlo_simulation(portfolio)
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Premium feature - upgrade required"
+    )
 
 @router.post('/api/v1/receipt')
 async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form(...), user = Depends(verify_jwt)):
