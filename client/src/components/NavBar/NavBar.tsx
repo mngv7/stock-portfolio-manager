@@ -12,6 +12,7 @@ function NavBar() {
             <NavLink to='/app/portfolio'>
                 Dashboard
             </NavLink>
+            <button>Upgrade</button>
             <div className="navbar-right">
                 <NavLink to='/' onClick={clearJwt}>
                     Log Out

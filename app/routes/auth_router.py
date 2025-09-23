@@ -9,6 +9,9 @@ import jwt
 
 router = APIRouter()
 
+class GroupUpdate(BaseModel):
+    group: str
+
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -63,3 +66,9 @@ def signup(request: SignupRequest):
 @router.post("/api/v1/confirm_email")
 def confirm_email(request: ConfirmEmailRequest):
     return cognito.confirm(request.username, request.confirmationCode)
+
+@router.patch("/api/v1/user/group")
+def update_user_group(data: GroupUpdate, user=Depends(verify_jwt)):
+    username = user["username"]
+    new_group = cognito.update_user_group(username, data.group)
+    return {"username": username, "new_group": new_group}
