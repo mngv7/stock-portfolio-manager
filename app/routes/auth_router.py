@@ -69,6 +69,6 @@ def confirm_email(request: ConfirmEmailRequest):
 
 @router.patch("/api/v1/user/group")
 def update_user_group(data: GroupUpdate, user=Depends(verify_jwt)):
-    username = user["username"]
+    username = user["cognito:username"]
     new_group = cognito.update_user_group(username, data.group)
     return {"username": username, "new_group": new_group}

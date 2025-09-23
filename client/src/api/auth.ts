@@ -128,3 +128,22 @@ export async function decodeJwt(jwt: string) {
 
     return response.json();
 }
+
+export async function upgradeToPremiumUser(jwt: string) {
+    const response = await fetch(`${API_URL}/api/v1/user/group`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`  
+        },
+        body: JSON.stringify({ group: "premium-user" })
+    });
+
+    if (!response.ok) {
+        const error = new Error("Failed to upgrade user to premium!") as any;
+        error.status = response.status;
+        throw error;    
+    }
+
+    return response.json();
+}
