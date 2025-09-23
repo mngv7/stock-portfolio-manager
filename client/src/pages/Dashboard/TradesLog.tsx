@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getReceiptS3Url, getTrades } from "../../api/portfolio";
 import './TradesLog.css'
+import { useNavigate } from "react-router-dom";
 
 function TradesLog() {
+    const navigate = useNavigate();
     const token = localStorage.getItem("jwt");
 
     // Trade searching
@@ -46,13 +48,7 @@ function TradesLog() {
             const response = await getReceiptS3Url(searchTimestamp, searchTicker, token);
             if (response.presigned_url) {
                 setPresignedUrl(response.presigned_url);
-                try {
-                    console.log(presignedUrl);
-                    // navigator.clipboard.writeText(presignedUrl);
-                    // show a toast
-                } catch (e) {
-                    console.log(e);
-                }
+                navigate(presignedUrl);
                 setSearchTicker(null);
                 setSearchTimestamp(null);
             }
