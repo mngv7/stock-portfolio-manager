@@ -121,3 +121,22 @@ export async function uploadReceipt(receipt_file: File, trade: Trade, jwt: strin
 
     return "File uploaded!"
 }
+
+export async function getReceiptS3Url(timestamp: number, ticker: string, jwt: string) {
+    const params = new URLSearchParams()
+    params.append("timestamp", timestamp.toString());
+    params.append("ticker", ticker.toString());
+
+    const response = await fetch(`${API_URL}/api/v1/receipt?${params}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwt}`,
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to get trade receipt.");
+    }
+
+    return response.json();
+}
