@@ -91,7 +91,7 @@ def get_monte_carlo_forecase(user_uuid = Depends(verify_jwt)):
 async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form(...), user_uuid = Depends(verify_jwt)):
     trade = TradeRequest(**json.loads(trade))
     trade_id = generate_trade_id(user_uuid, trade.timestamp, trade.ticker)
-    pdf_contents = await receipt_file.file.read()
+    pdf_contents = receipt_file.file.read()
     return receipts_bucket.write_receipts(trade_id, pdf_contents)
 
 @router.get('/api/v1/receipt')

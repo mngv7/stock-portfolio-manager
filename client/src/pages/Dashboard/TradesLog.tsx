@@ -44,14 +44,23 @@ function TradesLog() {
 
         if (searchTimestamp && searchTicker) {
             const response = await getReceiptS3Url(searchTimestamp, searchTicker, token);
-            setPresignedUrl(response.presigned_url);
+            if (response.presigned_url) {
+                setPresignedUrl(response.presigned_url);
+                try {
+                    console.log(presignedUrl);
+                    // navigator.clipboard.writeText(presignedUrl);
+                    // show a toast
+                } catch (e) {
+                    console.log(e);
+                }
+                setSearchTicker(null);
+                setSearchTimestamp(null);
+            }
+
         } else {
             console.log("Please enter a timestamp and ticker.");
-            return;
         }
-
-        console.log(presignedUrl);
-    }
+    };
 
     useEffect(() => {
         const callGetTrades = async () => {
