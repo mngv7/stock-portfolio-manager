@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
-import { getTrades } from "../../api/portfolio";
+import { getReceiptS3Url, getTrades } from "../../api/portfolio";
 import './TradesLog.css'
 
 function TradesLog() {
+    const token = localStorage.getItem("jwt");
+
+    // Trade searching
     const [loadTrades, setLoadTrades] = useState(0);
     const [tickerSort, setTickerSort] = useState('');
-    const token = localStorage.getItem("jwt");
     const [tradeSearchResult, setTradeSearchResult] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
     const [pageNumber, setPageNumber] = useState(1);
     const [totalTrades, setTotalTrades] = useState(0);
+
+    // Generate S3 URL
+    const [searchTimestamp, setSearchTimestamp] = useState<number | null>(null);
+    const [searchTicker, setSearchTicker] = useState<string | null>(null);
+    const [presignedUrl, setPresignedUrl] = useState("");
+
     const pageSize = 5;
 
     const handleLoad = () => {
@@ -31,6 +39,20 @@ function TradesLog() {
         }
     };
 
+    const handleGeneratePresignedUrl = async () => {
+        if (!token) return;
+
+        if (searchTimestamp && searchTicker) {
+            const response = await getReceiptS3Url(searchTimestamp, searchTicker, token);
+            setPresignedUrl(response.presigned_url);
+        } else {
+            console.log("Please enter a timestamp and ticker.");
+            return;
+        }
+
+        console.log(presignedUrl);
+    }
+
     useEffect(() => {
         const callGetTrades = async () => {
             if (token) {
@@ -48,18 +70,35 @@ function TradesLog() {
         <div className="trades-log-container">
             <h1>Trades</h1>
             <p>Search through trades</p>
-            <input
-                placeholder="Ticker"
-                maxLength={10}
-                value={tickerSort}
-                onChange={(e) => setTickerSort(e.target.value)}
-            />
-            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-            <button onClick={handleLoad}>Search</button>
-            <button onClick={() => {setTradeSearchResult([]); setTotalTrades(0);}}>Clear</button>
+            <div className="trades-log-header">
+                <div>
+                    <input
+                        placeholder="Ticker"
+                        maxLength={10}
+                        value={tickerSort}
+                        onChange={(e) => setTickerSort(e.target.value)}
+                    />
+                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                    <button onClick={handleLoad}>Search</button>
+                </div>
+
+                <div>
+                    <input 
+                        placeholder="Timestamp"
+                        value={searchTimestamp ?? ""}
+                        onChange={(e) => setSearchTimestamp(Number(e.target.value))}
+                    />
+                    <input 
+                        placeholder="Ticker"
+                        value={searchTicker ?? ""}
+                        onChange={(e) => setSearchTicker(e.target.value)}
+                    />
+                    <button onClick={handleGeneratePresignedUrl}>Generate</button>
+                </div>
+            </div>
             <br />
             
             <pre>{JSON.stringify(tradeSearchResult, null, 2)}</pre>

@@ -138,5 +138,5 @@ export async function getReceiptS3Url(timestamp: number, ticker: string, jwt: st
         throw new Error("Failed to get trade receipt.");
     }
 
-    return response
+    return response.json();
 }
