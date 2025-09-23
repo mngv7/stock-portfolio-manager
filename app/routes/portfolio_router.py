@@ -19,14 +19,7 @@ class TradeRequest(BaseModel):
     fee: float
     timestamp: int
 
-class TickerHistoryRequest(BaseModel):
-    ticker: str
-    timestamp: float
-
 router = APIRouter()
-
-# TODO
-# Refactor the following to query the database with the sub identifier
 
 @router.get("/api/v1/portfolio/assets")
 def get_portfolio_assets(user_uuid = Depends(verify_jwt)):
@@ -102,5 +95,7 @@ async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form
     return receipts_bucket.write_receipts(trade_id, pdf_contents)
 
 @router.get('/api/v1/receipt')
-def fetch_receipt(trade_id: str, user_uuid = Depends(verify_jwt)):
-    pass
+def fetch_receipt(timestamp: int, ticker: str, user_uuid = Depends(verify_jwt)):
+    trade_id = generate_trade_id(user_uuid, timestamp, ticker)
+    presigned_url = receipts_bucket.get_presigned_receipt_url(trade_id)
+    return {"presigned_url": presigned_url}
