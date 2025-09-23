@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, UploadFile, File, Form
+from fastapi import APIRouter, Depends, Query, UploadFile, File, Form, HTTPException, status
 import app.controllers.portfolio_controller as pc
 from app.utils.gen_id import generate_trade_id
 from pydantic import BaseModel
@@ -22,13 +22,15 @@ class TradeRequest(BaseModel):
 router = APIRouter()
 
 @router.get("/api/v1/portfolio/assets")
-def get_portfolio_assets(user_uuid = Depends(verify_jwt)):
+def get_portfolio_assets(user = Depends(verify_jwt)):
+    user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
     load_portfolio_assets(portfolio)
     return portfolio.assets
 
 @router.post("/api/v1/portfolio/trades", status_code=201)
-def log_trade(trade_request: TradeRequest, user_uuid = Depends(verify_jwt)):
+def log_trade(trade_request: TradeRequest, user = Depends(verify_jwt)):
+    user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
     load_portfolio_assets(portfolio)
     load_trades(portfolio)
@@ -53,11 +55,12 @@ def log_trade(trade_request: TradeRequest, user_uuid = Depends(verify_jwt)):
     return {"message": "Trade logged successfully"}
 
 @router.get("/api/v1/portfolio/trades")
-def get_trade_history(user_uuid = Depends(verify_jwt),
+def get_trade_history(user = Depends(verify_jwt),
                       page_no: int = Query(1, ge=1, description="Page number."),
                       page_size: int = Query(1, ge=1, description="Number of trades per page."),
                       ticker: str = Query(None, description="Filter trades by ticker symbol."),
                       sort_order: str = Query(None, description="Sort by ascending, descending, or none.")):
+    user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
     load_trades(portfolio)
 
@@ -74,21 +77,30 @@ def delete_trade(trade_id: int, user = Depends(verify_jwt)):
     # return pc.delete_trade(user.username, trade_id)
 
 @router.get("/api/v1/portfolio/value")
-def get_portfolio_historical_value(user_uuid = Depends(verify_jwt)):
+def get_portfolio_historical_value(user = Depends(verify_jwt)):
+    user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
     load_portfolio_assets(portfolio)
     load_trades(portfolio)
     return portfolio.get_portfolio_historical_value()
 
 @router.get("/api/v1/portfolio/forecast")
-def get_monte_carlo_forecase(user_uuid = Depends(verify_jwt)):
-    portfolio = Portfolio(user_uuid, "1")
-    load_portfolio_assets(portfolio)
+def get_monte_carlo_forecase(user = Depends(verify_jwt)):
+    groups = user.get("cognito:groups", [])
+    if "premium-user" in groups:
+        user_uuid = user["sub"]
+        portfolio = Portfolio(user_uuid, "1")
+        load_portfolio_assets(portfolio)
 
-    return pc.calculate_monte_carlo_simulation(portfolio)
+        return pc.calculate_monte_carlo_simulation(portfolio)
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Premium feature - upgrade required"
+    )
 
 @router.post('/api/v1/receipt')
-async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form(...), user_uuid = Depends(verify_jwt)):
+async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form(...), user = Depends(verify_jwt)):
+    user_uuid = user["sub"]
     trade = TradeRequest(**json.loads(trade))
     trade_id = generate_trade_id(user_uuid, trade.timestamp, trade.ticker)
     pdf_contents = receipt_file.file.read()

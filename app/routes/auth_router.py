@@ -9,6 +9,9 @@ import jwt
 
 router = APIRouter()
 
+class GroupUpdate(BaseModel):
+    group: str
+
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -28,17 +31,13 @@ class ChallengeResponse(BaseModel):
     authCode: str
     session: str
 
-@router.post('/api/v1/auth')
-def check_jwt(user = Depends(verify_jwt)):
-    return user
-
 @router.post("/api/v2/auth")
 def check_jwt(user = Depends(verify_jwt)):
-    return user
+    return user["sub"]
 
-@router.post("/api/v1/login")
-async def login(request: LoginRequest):
-    return await auth.login(request.username, request.password)
+@router.get("/api/v1/jwt/decode")
+def decode_jwt(user = Depends(verify_jwt)):
+    return user
 
 @router.post("/api/v2/login")
 def login(request: LoginRequest):
@@ -67,3 +66,9 @@ def signup(request: SignupRequest):
 @router.post("/api/v1/confirm_email")
 def confirm_email(request: ConfirmEmailRequest):
     return cognito.confirm(request.username, request.confirmationCode)
+
+@router.patch("/api/v1/user/group")
+def update_user_group(data: GroupUpdate, user=Depends(verify_jwt)):
+    username = user["cognito:username"]
+    new_group = cognito.update_user_group(username, data.group)
+    return {"username": username, "new_group": new_group}

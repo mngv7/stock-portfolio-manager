@@ -21,13 +21,14 @@ region = "ap-southeast-2"
 JWKS_URL = f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json"
 JWKS = requests.get(JWKS_URL).json()
 
+client = boto3.client("cognito-idp", region_name=region)
+
 def secretHash(clientId, clientSecret, username):
     message = bytes(username + clientId,'utf-8') 
     key = bytes(clientSecret,'utf-8') 
     return base64.b64encode(hmac.new(key, message, digestmod=hashlib.sha256).digest()).decode() 
 
 def signup(username: str, email: str, password: str, phone_number: str):
-    client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.sign_up(
             ClientId=client_id,
@@ -43,7 +44,6 @@ def signup(username: str, email: str, password: str, phone_number: str):
         return None
 
 def authenticate(username: str, password: str):
-    client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.initiate_auth(
             AuthFlow="USER_PASSWORD_AUTH",
@@ -60,7 +60,6 @@ def authenticate(username: str, password: str):
         return None
 
 def email_otp_challenge(username: str, auth_code: str, session: str):
-    client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.respond_to_auth_challenge(
             ClientId=client_id,
@@ -77,7 +76,6 @@ def email_otp_challenge(username: str, auth_code: str, session: str):
         print(f"Error during MFA authentication: {e}")
 
 def confirm(username: str, confirmation_code: str):
-    client = boto3.client("cognito-idp", region_name=region)
     try:
         response = client.confirm_sign_up(
             ClientId=client_id,
@@ -89,6 +87,30 @@ def confirm(username: str, confirmation_code: str):
     except Exception as e:
         print(f"Error during confirmation: {e}")
         return None
+
+def get_user_groups(username: str):
+    try:
+        response = client.admin_list_groups_for_user(
+            UserPoolId=user_pool_id,
+            Username=username
+        )
+        return response.get('Groups', [])
+    except Exception as e:
+        print(f"Failed to get user groups: {e}")
+
+def update_user_group(username: str, group: str):
+    for user_group in get_user_groups(username):
+        if user_group['GroupName'] == group:
+            return None
+    try:
+        client.admin_add_user_to_group(
+            UserPoolId=user_pool_id,
+            Username=username,
+            GroupName=group
+        )
+        return group
+    except Exception as e:
+        print(f"Failed to update group to {group}: {e}")
     
 def verify_jwt(credentials: HTTPAuthorizationCredentials = Depends(security)):
     if not credentials or credentials.scheme != "Bearer":
@@ -104,7 +126,7 @@ def verify_jwt(credentials: HTTPAuthorizationCredentials = Depends(security)):
             audience=client_id,
             issuer=f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}"
         )
-        return payload["sub"]
+        return payload
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:

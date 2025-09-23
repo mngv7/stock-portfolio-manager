@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getMonteCarloForecast } from "../../api/portfolio";
 import './Analysis.css'
+import { decodeJwt } from "../../api/auth";
 
 function Analysis() {
     const token = localStorage.getItem("jwt");
-    const [triggerSimulation, setTriggerSimulation] = useState(0);
     const [expectedReturn, setExpectedReturn] = useState(0);
     const [volatility, setVolatility] = useState(0);
     const [fifthPercentile, setFifthPercentile] = useState(0);
@@ -12,31 +12,33 @@ function Analysis() {
     const [var95, setVar95] = useState(0);
     const [_, setDistribution] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isPremiumUser, setIsPremiumUser] = useState(false);
 
-    useEffect(() => {
-        if (triggerSimulation > 0) {
-            const executeMonteCarlo = async () => {
-                if (token) {
-                    setLoading(true);
-                    const response = await getMonteCarloForecast(token);
-                    setLoading(false);
-                    setExpectedReturn(response["expected_return"]);
-                    setVolatility(response["volatility"]);
-                    setFifthPercentile(response["5th_percentile"]);
-                    setNinetyFifthPercentile(response["95th_percentile"]);
-                    setVar95(response["VaR_95"]);
-                    setDistribution(response["distribution"]);
-                }
-            };
-
-            executeMonteCarlo();
+    const executeMonteCarlo = async () => {
+        if (token && isPremiumUser) {
+            setLoading(true);
+            const response = await getMonteCarloForecast(token);
+            setLoading(false);
+            setExpectedReturn(response["expected_return"]);
+            setVolatility(response["volatility"]);
+            setFifthPercentile(response["5th_percentile"]);
+            setNinetyFifthPercentile(response["95th_percentile"]);
+            setVar95(response["VaR_95"]);
+            setDistribution(response["distribution"]);
         }
-    }, [triggerSimulation]);
+    };
 
-
-    const handleSimulationExecute = () => {
-        setTriggerSimulation(triggerSimulation + 1);
+    const verifyPremiumUser = async () => {
+        if (!token) return;
+        const response = await decodeJwt(token);
+        if (response["cognito:groups"].includes("premium-user")) {
+            setIsPremiumUser(true);
+        } else {
+            setIsPremiumUser(false);
+        }
     }
+
+    verifyPremiumUser();
 
     return (
         <div className="analysis">
@@ -51,12 +53,11 @@ function Analysis() {
             95th Percentile: {ninetyFifthPercentile}
             <br />
             Value at Risk 95: {var95}
-            <button 
-                value={triggerSimulation}
-                onClick={handleSimulationExecute}
-            >Run Simulation</button>
+            <button onClick={executeMonteCarlo}>
+            {isPremiumUser ? "Run Simulation": "Upgrade to Premium"}
+            </button>
         </div>
-    )
+    );
 }
 
 export default Analysis;
