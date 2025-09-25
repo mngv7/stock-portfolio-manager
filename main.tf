@@ -13,3 +13,30 @@ resource "aws_instance" "app_server" {
     purpose      = "assessment-2"
   }
 }
+
+resource "aws_cognito_user_pool" "app_user_pool" {
+  name = "n11592931-assessment-2-user-pool"
+
+  mfa_configuration = "OFF"  # TerraForm does not support email MFA; configure manually
+
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
+}
+
+
+resource "aws_cognito_user_pool_client" "app_client_user_pool" {
+  name         = "n11592931-assessment-2-user-pool-client"
+  user_pool_id = aws_cognito_user_pool.app_user_pool.id
+
+  refresh_token_validity = 5 # in days
+  access_token_validity  = 1 # in hours
+  id_token_validity      = 1 # in hours
+
+  explicit_auth_flows = [
+    "ALLOW_USER_AUTH",
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+}
