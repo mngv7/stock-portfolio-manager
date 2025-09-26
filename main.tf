@@ -145,3 +145,17 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "receipts" {
     }
   }
 }
+
+resource "aws_elasticache_cluster" "memcached_cluster" {
+  cluster_id = "n11592931-assessment-2"
+
+  engine               = "memcached"
+  node_type            = "cache.t4g.micro"
+  parameter_group_name = "default.memcached1.6"
+  num_cache_nodes      = 1
+  subnet_group_name    = "cab432-subnets"
+
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
+}
