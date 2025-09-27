@@ -145,3 +145,44 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "receipts" {
     }
   }
 }
+
+resource "aws_elasticache_cluster" "memcached_cluster" {
+  cluster_id = "n11592931-assessment-2"
+
+  engine               = "memcached"
+  node_type            = "cache.t4g.micro"
+  parameter_group_name = "default.memcached1.6"
+  num_cache_nodes      = 1
+  subnet_group_name    = "cab432-subnets"
+
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
+}
+
+resource "aws_secretsmanager_secret" "cognito_secrets" {
+  name = "n11592931-cognito-secrets"
+}
+
+resource "aws_secretsmanager_secret_version" "user_pool_client_secret" {
+  secret_id     = "USERS_COGNITO_CLIENT_SECRET"
+  secret_string = aws_cognito_user_pool_client.app_client_user_pool.client_secret
+}
+
+resource "aws_ssm_parameter" "client_id_parameter" {
+  name  = "/n11592931/cognito/users/client_id"
+  type  = "String"
+  value = aws_cognito_user_pool_client.app_client_user_pool.client_secret
+}
+
+resource "aws_ssm_parameter" "name" {
+  name  = "/n11592931/cognito/users/pool_id"
+  type  = "String"
+  value = aws_cognito_user_pool.app_user_pool.id
+}
+
+resource "aws_ssm_parameter" "name" {
+  name  = "/n11592931/memcached/endpoint"
+  type  = "String"
+  value = aws_elasticache_cluster.memcached_cluster.configuration_endpoint
+}
