@@ -48,7 +48,8 @@ function TradesLog() {
             const response = await getReceiptS3Url(searchTimestamp, searchTicker, token);
             if (response.presigned_url) {
                 setPresignedUrl(response.presigned_url);
-                navigate(presignedUrl);
+                console.log(presignedUrl);
+                window.open(presignedUrl, "_blank");
                 setSearchTicker(null);
                 setSearchTimestamp(null);
             }

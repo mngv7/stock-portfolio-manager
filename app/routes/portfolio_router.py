@@ -107,7 +107,8 @@ async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form
     return receipts_bucket.write_receipts(trade_id, pdf_contents)
 
 @router.get('/api/v1/receipt')
-def fetch_receipt(timestamp: int, ticker: str, user_uuid = Depends(verify_jwt)):
+def fetch_receipt(timestamp: int, ticker: str, user = Depends(verify_jwt)):
+    user_uuid = user["sub"]
     trade_id = generate_trade_id(user_uuid, timestamp, ticker)
     presigned_url = receipts_bucket.get_presigned_receipt_url(trade_id)
     return {"presigned_url": presigned_url}

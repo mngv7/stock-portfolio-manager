@@ -7,8 +7,11 @@ resource "aws_instance" "app_server" {
   subnet_id              = "subnet-04ca053dcbe5f49cc"
   vpc_security_group_ids = ["sg-032bd1ff8cf77dbb9"]
   instance_type          = "t3.micro"
+
+  iam_instance_profile = "CAB432-Instance-Role"
+
   tags = {
-    Name         = "n11592931-assessmnet-2"
+    Name         = "n11592931-assessment-2"
     qut-username = "n11592931@qut.edu.au"
     purpose      = "assessment-2"
   }
@@ -175,14 +178,20 @@ resource "aws_ssm_parameter" "client_id_parameter" {
   value = aws_cognito_user_pool_client.app_client_user_pool.client_secret
 }
 
-resource "aws_ssm_parameter" "name" {
+resource "aws_ssm_parameter" "user_pool_id_parameter" {
   name  = "/n11592931/cognito/users/pool_id"
   type  = "String"
   value = aws_cognito_user_pool.app_user_pool.id
 }
 
-resource "aws_ssm_parameter" "name" {
+resource "aws_ssm_parameter" "memcached_endpoint_parameter" {
   name  = "/n11592931/memcached/endpoint"
   type  = "String"
   value = aws_elasticache_cluster.memcached_cluster.configuration_endpoint
+}
+
+resource "aws_ssm_parameter" "backend_api_url_parameter" {
+  name  = "/n11592931/backend/api_url"
+  type  = "String"
+  value = aws_instance.app_server.public_dns
 }
