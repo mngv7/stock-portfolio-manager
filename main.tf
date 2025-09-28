@@ -20,7 +20,7 @@ resource "aws_instance" "app_server" {
 resource "aws_cognito_user_pool" "app_user_pool" {
   name = "n11592931-assessment-2-user-pool"
 
-  mfa_configuration = "OFF" # TerraForm does not support email MFA; configure manually
+  mfa_configuration = "OFF" # couldn't get around the permissions; configure manually :(
 
   tags = {
     qut-username = "n11592931@qut.edu.au"
@@ -165,6 +165,10 @@ resource "aws_elasticache_cluster" "memcached_cluster" {
 
 resource "aws_secretsmanager_secret" "cognito_secrets" {
   name = "n11592931-cognito-secrets"
+
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "user_pool_client_secret" {
@@ -176,22 +180,28 @@ resource "aws_ssm_parameter" "client_id_parameter" {
   name  = "/n11592931/cognito/users/client_id"
   type  = "String"
   value = aws_cognito_user_pool_client.app_client_user_pool.client_secret
+
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
 }
 
 resource "aws_ssm_parameter" "user_pool_id_parameter" {
   name  = "/n11592931/cognito/users/pool_id"
   type  = "String"
   value = aws_cognito_user_pool.app_user_pool.id
+
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
 }
 
 resource "aws_ssm_parameter" "memcached_endpoint_parameter" {
   name  = "/n11592931/memcached/endpoint"
   type  = "String"
   value = aws_elasticache_cluster.memcached_cluster.configuration_endpoint
-}
 
-resource "aws_ssm_parameter" "backend_api_url_parameter" {
-  name  = "/n11592931/backend/api_url"
-  type  = "String"
-  value = aws_instance.app_server.public_dns
+  tags = {
+    qut-username = "n11592931@qut.edu.au"
+  }
 }

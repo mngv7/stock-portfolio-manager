@@ -7,7 +7,7 @@ import re
 import io
 
 MEMCACHED_ENDPOINT = fetch_parameter_local("/n11592931/memcached/endpoint")
-CACHE_TTL = 3600
+CACHE_TTL = 1800
 
 memcached_client = Client(MEMCACHED_ENDPOINT)
 
@@ -34,7 +34,7 @@ class CachedTicker:
         if value:
             df = pd.read_json(io.StringIO(value.decode("utf-8")), convert_dates=True)
             if isinstance(df.index, pd.DatetimeIndex) and df.index.tz is None:
-                df.index = df.index.tz_localize('UTC')  # or 'America/New_York' if you want yfinance's original tz
+                df.index = df.index.tz_localize('UTC')
             return df
 
         # Cache miss
