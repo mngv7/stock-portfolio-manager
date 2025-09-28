@@ -81,10 +81,19 @@ Overview
 
 - **What data is stored within your application that is not stored in cloud data services?:** The server does not store any data outside of cloud services. On the client side, Monte Carlo analysis results and tokens are temporarily stored.
 - **Why is this data not considered persistent state?:** Monte carlo analysis output can be recalculated from portfolio information (which is stored in the cloud). Tokens are session-based and do not require persistence.
-- **How does your application ensure data consistency if the app suddenly stops?:** The application relies on DynamoDB as the single source of truth, so consistency remains if the app fails, as it can just reload data from DynamoDB.
+- **How does your application ensure data consistency if the app suddenly stops?:** The application relies on DynamoDB as the single source of truth, so consistency remains if the app fails; as it can just reload data from DynamoDB.
 - **Relevant files:**
-    -
-
+    - **DynamoDB persistence**
+    - /app/services/dynamo/portfolios_table.py
+    - /app/services/dynamo/users_table.py
+    - /app/services/dynamo/trades_table.py
+    - **Use of loading data**
+    - /app/routes/portfolio_router.py
+    - **Token storage**
+    - /client/src/pages/Login/LoginChallengeContainer.tsx
+    - **Monte Carlo temp. storage**
+    - /client/src/pages/Dashboard/Analysis.tsx
+ 
 ### Graceful handling of persistent connections
 
 - **Type of persistent connection and use:**
