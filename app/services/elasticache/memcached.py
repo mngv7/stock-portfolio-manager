@@ -45,5 +45,3 @@ class CachedTicker:
             expire=CACHE_TTL
         )
         return df
-
-

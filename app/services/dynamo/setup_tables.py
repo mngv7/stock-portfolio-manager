@@ -1,3 +1,5 @@
+# NOTE this file is no longer being used -- replaced by TerraForm services.
+
 import boto3
 from botocore.exceptions import ClientError
 
