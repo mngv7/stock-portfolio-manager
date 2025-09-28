@@ -38,8 +38,8 @@ Overview
 
 - **AWS service name:**  DynamoDB
 - **What data is being stored?:** User information, trades, and portfolios.
-- **Why is this service suited to this data?:**
-- **Why is are the other services used not suitable for this data?:**
+- **Why is this service suited to this data?:** DynamoDB can efficiently store and query structured data like users, trades, and portfolios. I opted for a NoSQL service for scalability and rapid development.
+- **Why is are the other services used not suitable for this data?:** Other services are intended for unstructured data and do not provide fast querying and transaction support needed for structured data. SQL services are less efficient for key-value patterns, which is widely used in this project.
 - **Bucket/instance/table name:** n11592931-users, n11592931-trades, n11592931-portfolios
 - **Video timestamp:** 0:30
 - **Relevant files:**
@@ -79,9 +79,9 @@ Overview
 
 ### Core - Statelessness
 
-- **What data is stored within your application that is not stored in cloud data services?:** There is no data stored in the server that isn't accessible from cloud data services. However, the client-side does store Monte carlo analysis output and tokens.
-- **Why is this data not considered persistent state?:** Monte carlo analysis output can be recalculated from portfolio information (which is stored in the cloud). Tokens are session-based and do not requrie persistence.
-- **How does your application ensure data consistency if the app suddenly stops?:** The app does not inherently handle data consistency, it uses DynamoDB as a single source of truth.
+- **What data is stored within your application that is not stored in cloud data services?:** The server does not store any data outside of cloud services. On the client side, Monte Carlo analysis results and tokens are temporarily stored.
+- **Why is this data not considered persistent state?:** Monte carlo analysis output can be recalculated from portfolio information (which is stored in the cloud). Tokens are session-based and do not require persistence.
+- **How does your application ensure data consistency if the app suddenly stops?:** The application relies on DynamoDB as the single source of truth, so consistency remains if the app fails, as it can just reload data from DynamoDB.
 - **Relevant files:**
     -
 
@@ -96,12 +96,13 @@ Overview
 ### Core - Authentication with Cognito
 
 - **User pool name:** n11592931-assessment-2-user-pool
-- **How are authentication tokens handled by the client?:** The client stores the ID Token in localstorage() once the user satisfies MFA. Once this token is set, it is sent to the backend to verify various endpoints. The client also uses the ID token to restrict navigation to various sites of the application.
+- **How are authentication tokens handled by the client?:** The client stores the ID Token in localstorage() once the user satisfies MFA. Once this token is set, it is sent to the backend as authorization for various endpoints. The client also uses the ID token to restrict navigation to different sites of the application.
 - **Video timestamp:** 1:53
 - **Relevant files:**
     - /app/services/cognito/cognito_services.py
     - /app/routes/auth_router.py
     - /client/src/pages/Login/LoginChallengeContainer.tsx
+    - /client/src/components/ProtectedRoute.tsx
 
 ### Cognito multi-factor authentication
 
@@ -110,6 +111,7 @@ Overview
 - **Relevant files:**
     - /app/services/cognito/cognito_services.py
     - /app/routes/auth_router.py
+    - /client/src/pages/Login/*.tsx
 
 ### Cognito federated identities
 
