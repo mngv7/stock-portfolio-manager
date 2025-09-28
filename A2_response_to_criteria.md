@@ -31,7 +31,8 @@ Overview
 - **Bucket/instance/table name:** n11592931-receipts
 - **Video timestamp:** 0:00
 - **Relevant files:**
-    - /app/services/s3/*.py
+    - /app/services/s3/receipts_bucket.py
+    - /app/routes/portfolio_router.py
 
 ### Core - Second data persistence service
 
@@ -42,7 +43,10 @@ Overview
 - **Bucket/instance/table name:** n11592931-users, n11592931-trades, n11592931-portfolios
 - **Video timestamp:** 0:30
 - **Relevant files:**
-    - app/services/dynamo/*.py
+    - /app/services/dynamo/portfolios_table.py
+    - /app/services/dynamo/users_table.py
+    - /app/services/dynamo/trades_table.py
+    - /app/routes/portfolio_router.py
 
 ### Third data service
 
@@ -61,6 +65,7 @@ Overview
 - **Video timestamp:** 0:48
 - **Relevant files:**
     - /app/services/s3/receipts_bucket.py
+    - /app/routes/portfolio_router.py
 
 ### In-memory cache
 
@@ -70,6 +75,7 @@ Overview
 - **Video timestamp:** 1:16
 - **Relevant files:**
     - /app/services/elasticache/memcached.py
+    - /app/models/portfolio_model.py
 
 ### Core - Statelessness
 
@@ -90,10 +96,12 @@ Overview
 ### Core - Authentication with Cognito
 
 - **User pool name:** n11592931-assessment-2-user-pool
-- **How are authentication tokens handled by the client?:** The client stores the ID Token in localstorage(). Once this token is set, it is sent to the backend to verify various endpoints. The client also uses the ID token to restrict navigation to various sites of the application.
+- **How are authentication tokens handled by the client?:** The client stores the ID Token in localstorage() once the user satisfies MFA. Once this token is set, it is sent to the backend to verify various endpoints. The client also uses the ID token to restrict navigation to various sites of the application.
 - **Video timestamp:** 1:53
 - **Relevant files:**
     - /app/services/cognito/cognito_services.py
+    - /app/routes/auth_router.py
+    - /client/src/pages/Login/LoginChallengeContainer.tsx
 
 ### Cognito multi-factor authentication
 
@@ -101,6 +109,7 @@ Overview
 - **Video timestamp:** 2:36
 - **Relevant files:**
     - /app/services/cognito/cognito_services.py
+    - /app/routes/auth_router.py
 
 ### Cognito federated identities
 
@@ -114,7 +123,8 @@ Overview
 - **How are groups used to set permissions?:** Premium users gain access to portfolio analytical tools. A user can switch themselves to a premium user via the UI; in practice this would be blocked by a pay wall.
 - **Video timestamp:** 2:55
 - **Relevant files:**
-    - 
+    - /app/services/cognito/cognito_services.py
+    - /client/src/pages/Dashboard/Analysis.tsx
 
 ### Core - DNS with Route53
 
@@ -127,13 +137,16 @@ Overview
 - **Video timestamp:** 4:08
 - **Relevant files:**
     - /app/services/parameter_store/parameter_store.py
+    - /app/services/cognito/cognito_services.py
+    - /app/services/elasticache/memcached.py
 
 ### Secrets manager
 
 - **Secrets names:** n11592931-cognito-secrets
 - **Video timestamp:** 4:47
 - **Relevant files:**
-    - app/services/secrets/secrets_manager.py
+    - /app/services/secrets/secrets_manager.py
+    - /app/services/cognito/cognito_services.py
 
 ### Infrastructure as code
 
