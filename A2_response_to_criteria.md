@@ -29,7 +29,7 @@ Overview
 - **Why is this service suited to this data?:** S3 is best for storing PDF files due to its scalability; allowing the app to store a large numer of PDFs, and high durability; ensure trade documents are intact. It is optimized for large amounts of unstructured data objects (PDF binaries), alternate services may not be as cost effective or efficient.
 - **Why is are the other services used not suitable for this data?:** Other persistent services are designed for different use cases. EBS is intended for EC2 volumes rather than long-term file storage. RDS and DynamoDB are designed for structured data, not large files. EFS is like a standard filesystem, not necessary for this application as we only need to fetch PDFs by keys, rather than having an organised file structure. These alternate services are less efficient for PDF storage; S3 is the best use for this application.
 - **Bucket/instance/table name:** n11592931-receipts
-- **Video timestamp:**
+- **Video timestamp:** 0:00
 - **Relevant files:**
     - /app/services/s3/*.py
 
@@ -40,7 +40,7 @@ Overview
 - **Why is this service suited to this data?:**
 - **Why is are the other services used not suitable for this data?:**
 - **Bucket/instance/table name:** n11592931-users, n11592931-trades, n11592931-portfolios
-- **Video timestamp:**
+- **Video timestamp:** 0:30
 - **Relevant files:**
     - app/services/dynamo/*.py
 
@@ -58,7 +58,7 @@ Overview
 ### S3 Pre-signed URLs
 
 - **S3 Bucket names:** n11592931-receipts
-- **Video timestamp:**
+- **Video timestamp:** 0:48
 - **Relevant files:**
     - /app/services/s3/receipts_bucket.py
 
@@ -67,7 +67,7 @@ Overview
 - **ElastiCache instance name:** n11592931-assessment-2
 - **What data is being cached?:** Historical prices for assets contained by a user's portfolio.
 - **Why is this data likely to be accessed frequently?:** This data is fetched from Yahoo finance on page refresh to ensure user has the most up-to-date stock prices. These prices are then used for generating portfolio value graph and for Monte Carlo analysis. Caching these values (TTL 30 minutes) reduces yfinance API calls while balancing accurate prices. 
-- **Video timestamp:**
+- **Video timestamp:** 1:16
 - **Relevant files:**
     - /app/services/elasticache/memcached.py
 
@@ -91,14 +91,14 @@ Overview
 
 - **User pool name:** n11592931-assessment-2-user-pool
 - **How are authentication tokens handled by the client?:** The client stores the ID Token in localstorage(). Once this token is set, it is sent to the backend to verify various endpoints. The client also uses the ID token to restrict navigation to various sites of the application.
-- **Video timestamp:**
+- **Video timestamp:** 1:53
 - **Relevant files:**
     - /app/services/cognito/cognito_services.py
 
 ### Cognito multi-factor authentication
 
 - **What factors are used for authentication:** Password and email code; once the user logs in with the correct password, they are prompted to enter the code sent to the email they signed up with.
-- **Video timestamp:**
+- **Video timestamp:** 2:36
 - **Relevant files:**
     - /app/services/cognito/cognito_services.py
 
@@ -112,26 +112,26 @@ Overview
 ### Cognito groups
 
 - **How are groups used to set permissions?:** Premium users gain access to portfolio analytical tools. A user can switch themselves to a premium user via the UI; in practice this would be blocked by a pay wall.
-- **Video timestamp:**
+- **Video timestamp:** 2:55
 - **Relevant files:**
     - 
 
 ### Core - DNS with Route53
 
 - **Subdomain**: portfoliomanager.cab432.com
-- **Video timestamp:**
+- **Video timestamp:** 3:51
 
 ### Parameter store
 
 - **Parameter names:** n11592931/cognito/users/client_id, n11592931/cognito/users/pool_id, /n11592931/memcached/endpoint
-- **Video timestamp:**
+- **Video timestamp:** 4:08
 - **Relevant files:**
     - /app/services/parameter_store/parameter_store.py
 
 ### Secrets manager
 
 - **Secrets names:** n11592931-cognito-secrets
-- **Video timestamp:**
+- **Video timestamp:** 4:47
 - **Relevant files:**
     - app/services/secrets/secrets_manager.py
 
