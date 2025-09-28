@@ -71,7 +71,7 @@ Overview
 
 - **ElastiCache instance name:** n11592931-assessment-2
 - **What data is being cached?:** Historical prices for assets contained by a user's portfolio.
-- **Why is this data likely to be accessed frequently?:** This data is fetched from Yahoo finance on page refresh to ensure user has the most up-to-date stock prices. These prices are then used for generating portfolio value graph and for Monte Carlo analysis. Caching these values (TTL 30 minutes) reduces yfinance API calls while balancing accurate prices. 
+- **Why is this data likely to be accessed frequently?:** This data is fetched from Yahoo finance on page refresh to ensure user has the most up-to-date stock prices. These prices are then used for generating portfolio value graph and for Monte Carlo analysis. Caching these values (TTL 30 minutes) reduces yfinance API calls while balancing accurate prices. Reducing API calls to yfinance lowers external API latency, avoids hitting request limits, and improves responsiveness of the app.
 - **Video timestamp:** 1:16
 - **Relevant files:**
     - /app/services/elasticache/memcached.py
