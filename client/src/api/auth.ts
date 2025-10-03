@@ -22,7 +22,7 @@ export interface ConfirmEmailData {
 }
 
 export async function isJwtValid(jwt: string) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v2/auth`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v2/auth`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${jwt}`
@@ -37,7 +37,7 @@ export async function isJwtValid(jwt: string) {
 }
 
 export async function login(loginData: LoginData) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v2/login`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v2/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -55,7 +55,7 @@ export async function login(loginData: LoginData) {
 }
 
 export async function emailOtpChallenge(challengeData: ChallengeData) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v1/challenge_response`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/challenge_response`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -73,7 +73,7 @@ export async function emailOtpChallenge(challengeData: ChallengeData) {
 }
 
 export async function signUp(signUpData: SignUpData) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v1/signup`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -92,7 +92,7 @@ export async function signUp(signUpData: SignUpData) {
 
 
 export async function confirmEmail(confirmEmailData: ConfirmEmailData) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v1/confirm_email`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/confirm_email`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -110,7 +110,7 @@ export async function confirmEmail(confirmEmailData: ConfirmEmailData) {
 }
 
 export async function decodeJwt(jwt: string) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v1/jwt/decode`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/jwt/decode`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -126,7 +126,7 @@ export async function decodeJwt(jwt: string) {
 }
 
 export async function upgradeToPremiumUser(jwt: string) {
-    const response = await fetch(`https://rqfdxfod2i.execute-api.ap-southeast-2.amazonaws.com/v1/api/v1/user/group`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/user/group`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
