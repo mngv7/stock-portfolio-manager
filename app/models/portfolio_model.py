@@ -38,33 +38,6 @@ class Portfolio():
         
         self.trades[ticker].append(trade)
 
-
-    # def update_trade(self, trade_id: int, ticker: str, avg_price: float, quantity: int, fee: float, timestamp: int):
-    #     if trade_id not in self.trade_index:
-    #         return None
-    #     trade = self.trade_index[trade_id]
-    #     trade.ticker = ticker
-    #     trade.avg_price = avg_price
-    #     trade.quantity = quantity
-    #     trade.fee = fee
-    #     trade.timestamp = timestamp
-    #     return {
-    #         "id": trade_id,
-    #         "ticker": ticker,
-    #         "avg_price": avg_price,
-    #         "quantity": quantity,
-    #         "fee": fee,
-    #         "timestamp": timestamp
-    #     }
-
-    # def delete_trade(self, trade_id: int):
-    #     if trade_id not in self.trade_index:
-    #         return False
-    #     trade = self.trade_index.pop(trade_id)
-    #     if trade.ticker in self.trades:
-    #         self.trades[trade.ticker] = [t for t in self.trades[trade.ticker] if getattr(t, "id", None) != trade_id]
-    #     return True
-
     def get_portfolio_weights(self) -> dict:
         result = {}
         total_value = 0

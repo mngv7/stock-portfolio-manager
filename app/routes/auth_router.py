@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Header, HTTPException
-import app.controllers.auth_controller as auth
 from pydantic import BaseModel, EmailStr
 import app.services.cognito.cognito_services as cognito
 from app.services.cognito.cognito_services import verify_jwt
