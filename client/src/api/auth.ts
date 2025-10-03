@@ -1,5 +1,3 @@
-const API_URL = import.meta.env.VITE_BUILD_ENV;
-
 export interface LoginData {
     username: string,
     password: string
@@ -24,10 +22,9 @@ export interface ConfirmEmailData {
 }
 
 export async function isJwtValid(jwt: string) {
-    const response = await fetch(`${API_URL}/api/v2/auth`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v2/auth`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${jwt}`
         },
     });
@@ -40,8 +37,7 @@ export async function isJwtValid(jwt: string) {
 }
 
 export async function login(loginData: LoginData) {
-    console.log(API_URL);
-    const response = await fetch(`${API_URL}/api/v2/login`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v2/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -59,7 +55,7 @@ export async function login(loginData: LoginData) {
 }
 
 export async function emailOtpChallenge(challengeData: ChallengeData) {
-    const response = await fetch(`${API_URL}/api/v1/challenge_response`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/challenge_response`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -77,7 +73,7 @@ export async function emailOtpChallenge(challengeData: ChallengeData) {
 }
 
 export async function signUp(signUpData: SignUpData) {
-    const response = await fetch(`${API_URL}/api/v1/signup`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -96,7 +92,7 @@ export async function signUp(signUpData: SignUpData) {
 
 
 export async function confirmEmail(confirmEmailData: ConfirmEmailData) {
-    const response = await fetch(`${API_URL}/api/v1/confirm_email`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/confirm_email`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -114,11 +110,11 @@ export async function confirmEmail(confirmEmailData: ConfirmEmailData) {
 }
 
 export async function decodeJwt(jwt: string) {
-    const response = await fetch(`${API_URL}/api/v1/jwt/decode`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/jwt/decode`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${jwt}`  
+            "Authorization": `Bearer ${jwt}`
         }
     });
 
@@ -130,11 +126,11 @@ export async function decodeJwt(jwt: string) {
 }
 
 export async function upgradeToPremiumUser(jwt: string) {
-    const response = await fetch(`${API_URL}/api/v1/user/group`, {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/user/group`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${jwt}`  
+            "Authorization": `Bearer ${jwt}`
         },
         body: JSON.stringify({ group: "premium-user" })
     });
@@ -142,7 +138,7 @@ export async function upgradeToPremiumUser(jwt: string) {
     if (!response.ok) {
         const error = new Error("Failed to upgrade user to premium!") as any;
         error.status = response.status;
-        throw error;    
+        throw error;
     }
 
     return response.json();
