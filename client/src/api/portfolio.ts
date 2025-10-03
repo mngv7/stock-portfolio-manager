@@ -1,5 +1,3 @@
-const API_URL = import.meta.env.VITE_BUILD_ENV;
-
 export interface Trade {
     ticker: string
     avg_price: number
