@@ -14,6 +14,7 @@ def put_monte_carlo_result(user_uuid: str, result: dict):
             TableName=TABLE_NAME,
             Item={
                 "qut-username": {"S": qut_username},
+                "task_name": {"S": "monte_carlo"},
                 "user_uuid": {"S": user_uuid},
                 "result": {"M": result}
             }
