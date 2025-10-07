@@ -4,6 +4,7 @@ import aioboto3
 from app.services.dynamo.worker_output_table import put_monte_carlo_result
 from app.services.dynamo.portfolios_table import load_portfolio_assets
 from app.models.portfolio_model import Portfolio
+import app.utils.dynamo_formatter as dynamo_formatter
 
 SQS_QUEUE_URL = "https://sqs.ap-southeast-2.amazonaws.com/901444280953/n11592931-monte-carlo-tasks"
 REGION_NAME = "ap-southeast-2"
@@ -39,7 +40,7 @@ async def monte_carlo_worker():
                         print("Calculating forecast...")
                         result = portfolio.monte_carlo_forecast()
                         print("Putting results...")
-                        put_monte_carlo_result(user_uuid, result)
+                        put_monte_carlo_result(user_uuid, dynamo_formatter.str_int_flat_dict(result))
                 
                 print("Deleting message...")
                 # Delete message
