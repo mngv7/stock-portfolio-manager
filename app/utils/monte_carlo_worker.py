@@ -18,6 +18,7 @@ async def monte_carlo_worker():
                 WaitTimeSeconds=15,
                 VisibilityTimeout=300  # adjust based on processing time
             )
+            print("Receiving message")
 
             messages = response.get("Messages", [])
             
