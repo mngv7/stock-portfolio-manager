@@ -10,6 +10,7 @@ from app.models.portfolio_model import Portfolio
 from app.utils.exceptions import InvalidTradeError
 from botocore.exceptions import ClientError
 from app.services.s3 import receipts_bucket
+import app.services.sqs.sqs as queue
 import json
 
 class TradeRequest(BaseModel):
@@ -79,10 +80,7 @@ def get_monte_carlo_forecase(user = Depends(verify_jwt)):
     groups = user.get("cognito:groups", [])
     if "premium-user" in groups:
         user_uuid = user["sub"]
-        portfolio = Portfolio(user_uuid, "1")
-        load_portfolio_assets(portfolio)
-
-        return pc.calculate_monte_carlo_simulation(portfolio)
+        queue.send_message({"task": "monte_carlo", "user": user_uuid})
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Premium feature - upgrade required"
