@@ -1,3 +1,4 @@
+from decimal import Decimal
 from app.models.trades_models import Trade
 from app.utils.exceptions import InvalidTradeError
 import numpy as np
@@ -89,14 +90,17 @@ class Portfolio():
         percentile_95 = np.percentile(portfolio_returns, 95)
         var_95 = np.percentile(portfolio_returns, 5)
 
+        portfolio_returns_dict = {str(i): Decimal(x) for i, x in enumerate(portfolio_returns.tolist())}
+
         return {
-            "expected_return": float(expected_return),
-            "volatility": float(volatility),
-            "5th_percentile": float(percentile_5),
-            "95th_percentile": float(percentile_95),
-            "VaR_95": float(var_95),
-            "distribution": portfolio_returns.tolist()
+            "expected_return": Decimal(float(expected_return)),
+            "volatility": Decimal(float(volatility)),
+            "5th_percentile": Decimal(float(percentile_5)),
+            "95th_percentile": Decimal(float(percentile_95)),
+            "VaR_95": Decimal(float(var_95)),
+            "distribution": {}
         }
+
 
     def get_portfolio_cov(self):
         returns_dict = {}
