@@ -22,3 +22,12 @@ def put_monte_carlo_result(user_uuid: str, result: dict):
         print("PutItem response:", response)
     except ClientError as e:
         print("PutItem failed:", e)
+
+def get_monte_carlo_result(user_uuid: str):
+    try:
+        response = dynamodb.get_item(
+            TableName = TABLE_NAME
+        )
+        return response
+    except ClientError as e:
+        print("Get item failed:", e)

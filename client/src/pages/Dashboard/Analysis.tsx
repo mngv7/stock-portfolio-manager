@@ -1,7 +1,28 @@
 import { useState } from "react";
-import { getMonteCarloForecast } from "../../api/portfolio";
+import { fetchPortfolioResult, getMonteCarloForecast } from "../../api/portfolio";
 import './Analysis.css'
 import { decodeJwt } from "../../api/auth";
+
+type Result = {
+    expected_return: number;
+    volatility: number;
+    '5th_percentile': number;
+    '95th_percentile': number;
+    VaR_95: number;
+    distribution: number[];
+};
+
+function pollResult(jwt: string, onResult: (result: Result) => void) {
+    const poll = async () => {
+        const result = await fetchPortfolioResult(jwt);
+        if (result) {
+            onResult(result);
+        } else {
+            setTimeout(poll, 5000);
+        }
+    };
+    poll();
+}
 
 function Analysis() {
     const token = localStorage.getItem("jwt");
@@ -14,17 +35,21 @@ function Analysis() {
     const [loading, setLoading] = useState(false);
     const [isPremiumUser, setIsPremiumUser] = useState(false);
 
+    const setSimulationResults = (result: Result) => {
+        setLoading(false);
+        setExpectedReturn(result.expected_return);
+        setVolatility(result.volatility);
+        setFifthPercentile(result["5th_percentile"]);
+        setNinetyFifthPercentile(result["95th_percentile"]);
+        setVar95(result.VaR_95);
+        setDistribution(result.distribution);
+    }
+
     const executeMonteCarlo = async () => {
         if (token && isPremiumUser) {
             setLoading(true);
-            const response = await getMonteCarloForecast(token);
-            setLoading(false);
-            setExpectedReturn(response["expected_return"]);
-            setVolatility(response["volatility"]);
-            setFifthPercentile(response["5th_percentile"]);
-            setNinetyFifthPercentile(response["95th_percentile"]);
-            setVar95(response["VaR_95"]);
-            setDistribution(response["distribution"]);
+            await getMonteCarloForecast(token);
+            pollResult(token, (result) => setSimulationResults(result))
         }
     };
 
@@ -54,7 +79,7 @@ function Analysis() {
             <br />
             Value at Risk 95: {var95}
             <button onClick={executeMonteCarlo}>
-            {isPremiumUser ? "Run Simulation": "Upgrade to Premium"}
+                {isPremiumUser ? "Run Simulation" : "Upgrade to Premium"}
             </button>
         </div>
     );
