@@ -29,7 +29,7 @@ class CachedTicker:
     def history(self, *args, **kwargs):
         raw_key = f"{self.symbol}:history:{args}:{kwargs}"
         key = re.sub(r"\s+", "", raw_key)
-
+        
         value = memcached_client.get(key)
         if value:
             df = pd.read_json(io.StringIO(value.decode("utf-8")), convert_dates=True)

@@ -150,7 +150,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "receipts" {
 }
 
 resource "aws_elasticache_cluster" "memcached_cluster" {
-  cluster_id = "n11592931-assessment-2"
+  cluster_id = "n11592931-assessment-3"
 
   engine               = "memcached"
   node_type            = "cache.t4g.micro"

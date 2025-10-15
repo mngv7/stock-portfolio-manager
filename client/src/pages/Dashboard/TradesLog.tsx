@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { getReceiptS3Url, getTrades } from "../../api/portfolio";
 import './TradesLog.css'
-import { useNavigate } from "react-router-dom";
 
 function TradesLog() {
-    const navigate = useNavigate();
     const token = localStorage.getItem("jwt");
 
     // Trade searching
@@ -92,12 +90,12 @@ function TradesLog() {
                 </div>
 
                 <div>
-                    <input 
+                    <input
                         placeholder="Timestamp"
                         value={searchTimestamp ?? ""}
                         onChange={(e) => setSearchTimestamp(Number(e.target.value))}
                     />
-                    <input 
+                    <input
                         placeholder="Ticker"
                         value={searchTicker ?? ""}
                         onChange={(e) => setSearchTicker(e.target.value)}
@@ -106,9 +104,9 @@ function TradesLog() {
                 </div>
             </div>
             <br />
-            
+
             <pre>{JSON.stringify(tradeSearchResult, null, 2)}</pre>
-            
+
             <div className="search-footer">
                 <p>Display {pageSize} items per page. Page {pageNumber} of {maxPage}.</p>
 

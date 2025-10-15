@@ -9,9 +9,9 @@ interface LoginChallengeProps {
     session: string
 }
 
-function LoginChallengeContainer({username, session}: LoginChallengeProps) {
+function LoginChallengeContainer({ username, session }: LoginChallengeProps) {
     const [authCode, setAuthCode] = useState('');
-    const [invalidCode, setInvalidCode] = useState(false);
+    const [_, setInvalidCode] = useState(false);
     const [returnToLogin, setReturnToLogin] = useState(false);
     const navigate = useNavigate();
 
@@ -46,27 +46,27 @@ function LoginChallengeContainer({username, session}: LoginChallengeProps) {
         return <LoginContainer />
     }
 
-return (
-    <div className='auth-container challenge-container'>
-        <h1>MFA</h1>
-        <div className='login-input-button-group'>
-            <input
-                value={authCode}
-                onChange={(e) => setAuthCode(e.target.value)}
-                className='login-input'
-                placeholder="MFA Code"
-            />
-            <button
-                className='login-button'
-                onClick={handleChallengeAttempt}
-                disabled={!isCodeValid(authCode)}
-            >
-                Confirm
-            </button>
-            <button className='login-button' onClick={handleReturn}>Return</button>
+    return (
+        <div className='auth-container challenge-container'>
+            <h1>MFA</h1>
+            <div className='login-input-button-group'>
+                <input
+                    value={authCode}
+                    onChange={(e) => setAuthCode(e.target.value)}
+                    className='login-input'
+                    placeholder="MFA Code"
+                />
+                <button
+                    className='login-button'
+                    onClick={handleChallengeAttempt}
+                    disabled={!isCodeValid(authCode)}
+                >
+                    Confirm
+                </button>
+                <button className='login-button' onClick={handleReturn}>Return</button>
+            </div>
         </div>
-    </div>
-);
+    );
 
 }
 
