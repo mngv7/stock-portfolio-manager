@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Query, UploadFile, File, Form, HTTPException, status
 import app.controllers.portfolio_controller as pc
+from app.services.dynamo.worker_output_table import get_monte_carlo_result
 from app.utils.gen_id import generate_trade_id
 from pydantic import BaseModel
 from app.services.cognito.cognito_services import verify_jwt
@@ -10,6 +11,7 @@ from app.models.portfolio_model import Portfolio
 from app.utils.exceptions import InvalidTradeError
 from botocore.exceptions import ClientError
 from app.services.s3 import receipts_bucket
+import app.services.sqs.sqs as queue
 import json
 
 class TradeRequest(BaseModel):
@@ -74,15 +76,12 @@ def get_portfolio_historical_value(user = Depends(verify_jwt)):
     load_trades(portfolio)
     return portfolio.get_portfolio_historical_value()
 
-@router.get("/api/v1/portfolio/forecast")
+@router.get("/api/v1/portfolio/forecast_task")
 def get_monte_carlo_forecase(user = Depends(verify_jwt)):
     groups = user.get("cognito:groups", [])
     if "premium-user" in groups:
         user_uuid = user["sub"]
-        portfolio = Portfolio(user_uuid, "1")
-        load_portfolio_assets(portfolio)
-
-        return pc.calculate_monte_carlo_simulation(portfolio)
+        queue.send_message({"task": "monte_carlo", "user": user_uuid})
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Premium feature - upgrade required"
@@ -102,3 +101,8 @@ def fetch_receipt(timestamp: int, ticker: str, user = Depends(verify_jwt)):
     trade_id = generate_trade_id(user_uuid, timestamp, ticker)
     presigned_url = receipts_bucket.get_presigned_receipt_url(trade_id)
     return {"presigned_url": presigned_url}
+
+@router.get('/api/v1/portfolio/forecast')
+def fetch_monte_carlo_result(user = Depends(verify_jwt)):
+    user_uuid = user["sub"]
+    return get_monte_carlo_result(user_uuid)

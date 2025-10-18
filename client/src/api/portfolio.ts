@@ -138,3 +138,17 @@ export async function getReceiptS3Url(timestamp: number, ticker: string, jwt: st
     return response.json();
 }
 
+export async function fetchPortfolioResult(jwt: string) {
+    const response = await fetch(`endpoint`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwt}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Could not fetch portfolio result");
+    }
+
+    return response.json();
+}

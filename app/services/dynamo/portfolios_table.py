@@ -1,17 +1,19 @@
 import boto3
+import aioboto3
 from boto3.dynamodb.types import TypeDeserializer
 from botocore.exceptions import ClientError
 from app.services.dynamo.setup_tables import region, portfolios_table_name, qut_username
 from app.models.portfolio_model import Portfolio
 from app.utils.gen_id import generate_portfolio_id
 
-dynamodb = boto3.client("dynamodb", region_name=region)
+session = aioboto3.Session()
 deserializer = TypeDeserializer()
 
 # First time initialization of a portfolio
 def put_portfolio(user_uuid: str, portfolio_no: str):
     portfolio_id = generate_portfolio_id(user_uuid)
     try:
+        dynamodb = boto3.client("dynamodb", region_name=region)
         response = dynamodb.put_item(
             TableName=portfolios_table_name,
             Item={
@@ -26,22 +28,27 @@ def put_portfolio(user_uuid: str, portfolio_no: str):
     except ClientError as e:
         print("PutItem failed:", e)
 
-def load_portfolio_assets(portfolio: Portfolio):
-    portfolio_id = generate_portfolio_id(portfolio.user_uuid)
-    response = dynamodb.get_item(
-        TableName=portfolios_table_name,
-        Key={
-            "qut-username": {"S": qut_username},
-            "portfolio_id": {"S": portfolio_id}
-        }
-    )
-    item = response.get("Item")
-    if not item:
-        portfolio.assets = {}
-        return
+async def load_portfolio_assets(portfolio: Portfolio):
+    async with session.client("dynamodb", region_name=region) as dynamodb:
+        portfolio_id = generate_portfolio_id(portfolio.user_uuid)
+        try:
+            response = await dynamodb.get_item(
+                TableName=portfolios_table_name,
+                Key={
+                    "qut-username": {"S": qut_username},
+                    "portfolio_id": {"S": portfolio_id}
+                }
+            )
+            item = response.get("Item")
+            if not item:
+                portfolio.assets = {}
+                return
 
-    raw_assets = item.get("assets", {}).get("M", {})
+            raw_assets = item.get("assets", {}).get("M", {})
 
-    portfolio.assets = deserializer.deserialize({"M": raw_assets})
-    portfolio.assets = {ticker: int(amount) for ticker, amount in portfolio.assets.items()}
-
+            portfolio.assets = deserializer.deserialize({"M": raw_assets})
+            portfolio.assets = {ticker: int(amount) for ticker, amount in portfolio.assets.items()}
+        except ClientError as e:
+            print(f"Client error: {e}")
+        except Exception as e:
+            print(f"Exception: {e}")
