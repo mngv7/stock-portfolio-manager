@@ -30,7 +30,11 @@ def get_monte_carlo_result(user_uuid: str):
     dynamodb = boto3.client("dynamodb", region_name=region)
     try:
         response = dynamodb.get_item(
-            TableName = TABLE_NAME
+            TableName = TABLE_NAME,
+            Key={
+                "qut-username": {"S": qut_username},
+                "user-uuid": {"S": user_uuid}
+            }
         )
         return response
     except ClientError as e:

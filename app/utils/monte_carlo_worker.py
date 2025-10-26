@@ -42,7 +42,7 @@ async def monte_carlo_worker():
                         )
                         continue
 
-                    if task.get("type") == "monte_carlo":
+                    if task.get("task") == "monte_carlo":
                         logger.info("Monte carlo task detected!")
                         user_uuid = task.get("user")
                         if user_uuid:

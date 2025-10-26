@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchPortfolioResult, getMonteCarloForecast } from "../../api/portfolio";
+import { fetchMonteCarloResult, postMonteCarloForecastTask } from "../../api/portfolio";
 import './Analysis.css'
 import { decodeJwt } from "../../api/auth";
 
@@ -14,7 +14,7 @@ type Result = {
 
 function pollResult(jwt: string, onResult: (result: Result) => void) {
     const poll = async () => {
-        const result = await fetchPortfolioResult(jwt);
+        const result = await fetchMonteCarloResult(jwt);
         if (result) {
             onResult(result);
         } else {
@@ -48,7 +48,7 @@ function Analysis() {
     const executeMonteCarlo = async () => {
         if (token && isPremiumUser) {
             setLoading(true);
-            await getMonteCarloForecast(token);
+            await postMonteCarloForecastTask(token);
             pollResult(token, (result) => setSimulationResults(result))
         }
     };
