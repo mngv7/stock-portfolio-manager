@@ -28,9 +28,8 @@ def put_portfolio(user_uuid: str, portfolio_no: str):
     except ClientError as e:
         print("PutItem failed:", e)
 
-async def load_portfolio_assets(portfolio: Portfolio):
+async def get_portfolio(portfolio_id: str):
     async with session.client("dynamodb", region_name=region) as dynamodb:
-        portfolio_id = generate_portfolio_id(portfolio.user_uuid)
         try:
             response = await dynamodb.get_item(
                 TableName=portfolios_table_name,
@@ -40,15 +39,22 @@ async def load_portfolio_assets(portfolio: Portfolio):
                 }
             )
             item = response.get("Item")
-            if not item:
-                portfolio.assets = {}
-                return
-
-            raw_assets = item.get("assets", {}).get("M", {})
-
-            portfolio.assets = deserializer.deserialize({"M": raw_assets})
-            portfolio.assets = {ticker: int(amount) for ticker, amount in portfolio.assets.items()}
+            return item
         except ClientError as e:
             print(f"Client error: {e}")
         except Exception as e:
             print(f"Exception: {e}")
+
+async def load_portfolio_assets(portfolio: Portfolio):
+    portfolio_id = generate_portfolio_id(portfolio.user_uuid)
+
+    item = await get_portfolio(portfolio_id)
+    
+    if not item:
+        portfolio.assets = {}
+        return
+
+    raw_assets = item.get("assets", {}).get("M", {})
+
+    portfolio.assets = deserializer.deserialize({"M": raw_assets})
+    portfolio.assets = {ticker: int(amount) for ticker, amount in portfolio.assets.items()}

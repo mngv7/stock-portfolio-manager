@@ -7,7 +7,7 @@ export interface Trade {
 }
 
 export async function getPortfolioAssets(jwt: string) {
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/portfolio/assets`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/assets`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export async function getPortfolioAssets(jwt: string) {
 }
 
 export async function postTrade(jwt: string, trade: Trade) {
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/portfolio/trades`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/trades`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export async function getTrades(jwt: string, pageNo: number = 1, pageSize: numbe
         params.append("sort_order", sortOrder);
     }
 
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/portfolio/trades?${params.toString()}`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/trades?${params.toString()}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${jwt}`
@@ -67,7 +67,7 @@ export async function getTrades(jwt: string, pageNo: number = 1, pageSize: numbe
 }
 
 export async function getPortfolioHistoricalValue(jwt: string) {
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/portfolio/value`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/value`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export async function uploadReceipt(receipt_file: File, trade: Trade, jwt: strin
     formData.append("receipt_file", receipt_file);
     formData.append("trade", JSON.stringify(trade));
 
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/receipt`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/receipt`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${jwt}`,
@@ -123,7 +123,7 @@ export async function getReceiptS3Url(timestamp: number, ticker: string, jwt: st
     params.append("timestamp", timestamp.toString());
     params.append("ticker", ticker);
 
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/receipt?${params}`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/receipt?${params}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${jwt}`,
