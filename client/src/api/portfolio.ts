@@ -86,8 +86,10 @@ export async function postMonteCarloForecastTask(jwt: string) {
     const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/forecast_task`, {
         method: "POST",
         headers: {
-            "Authorization": `Bearer ${jwt}`
-        }
+            "Authorization": `Bearer ${jwt}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
     });
 
     if (!response.ok) {

@@ -82,10 +82,11 @@ async def post_monte_carlo_task(user = Depends(verify_jwt)):
     if "premium-user" in groups:
         user_uuid = user["sub"]
         await queue.send_message({"task": "monte_carlo", "user": user_uuid})
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="Premium feature - upgrade required"
-    )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Premium feature - upgrade required"
+        )
 
 @router.post('/api/v1/receipt')
 async def receipt_upload(receipt_file: UploadFile = File(...), trade: str = Form(...), user = Depends(verify_jwt)):
