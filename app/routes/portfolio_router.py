@@ -24,17 +24,17 @@ class TradeRequest(BaseModel):
 router = APIRouter()
 
 @router.get("/api/v1/portfolio/assets")
-def get_portfolio_assets(user = Depends(verify_jwt)):
+async def get_portfolio_assets(user = Depends(verify_jwt)):
     user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
-    load_portfolio_assets(portfolio)
+    await load_portfolio_assets(portfolio)
     return portfolio.assets
 
 @router.post("/api/v1/portfolio/trades", status_code=201)
-def log_trade(trade_request: TradeRequest, user = Depends(verify_jwt)):
+async def log_trade(trade_request: TradeRequest, user = Depends(verify_jwt)):
     user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
-    load_portfolio_assets(portfolio)
+    await load_portfolio_assets(portfolio)
     load_trades(portfolio)
 
     trade = Trade(
@@ -69,10 +69,10 @@ def get_trade_history(user = Depends(verify_jwt),
     return pc.get_trade_history(portfolio, page_no, page_size, ticker, sort_order)
 
 @router.get("/api/v1/portfolio/value")
-def get_portfolio_historical_value(user = Depends(verify_jwt)):
+async def get_portfolio_historical_value(user = Depends(verify_jwt)):
     user_uuid = user["sub"]
     portfolio = Portfolio(user_uuid, "1")
-    load_portfolio_assets(portfolio)
+    await load_portfolio_assets(portfolio)
     load_trades(portfolio)
     return portfolio.get_portfolio_historical_value()
 
