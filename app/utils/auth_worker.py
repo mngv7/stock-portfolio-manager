@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
-import app.services.cognito.cognito_services as cognito
+from app.services.cognito import cognito_services as cognito
 from app.services.cognito.cognito_services import verify_jwt
 from app.services.dynamo.users_table import put_user
 from app.services.dynamo.portfolios_table import put_portfolio
@@ -76,8 +76,8 @@ def update_user_group(data: GroupUpdate, user=Depends(verify_jwt)):
 origins = ["*"]
 
 app = FastAPI(
-    title="",
-    description="",
+    title="Authentication worker",
+    description="Handles authentication as a microservice",
     version="0.0.1"
 )
 
