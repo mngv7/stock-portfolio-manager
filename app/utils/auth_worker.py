@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 import app.services.cognito.cognito_services as cognito
 from app.services.cognito.cognito_services import verify_jwt
@@ -71,3 +72,21 @@ def update_user_group(data: GroupUpdate, user=Depends(verify_jwt)):
     username = user["cognito:username"]
     new_group = cognito.update_user_group(username, data.group)
     return {"username": username, "new_group": new_group}
+
+origins = ["*"]
+
+app = FastAPI(
+    title="",
+    description="",
+    version="0.0.1"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]
+)
+
+app.include_router(router)
