@@ -1,7 +1,7 @@
 import json
 import aioboto3
 
-SQS_QUEUE_URL = "https://sqs.ap-southeast-2.amazonaws.com/901444280953/n11592931-assessment-3"
+SQS_QUEUE_URL = "https://sqs.ap-southeast-2.amazonaws.com/901444280953/n11592931-monte-carlo-tasks"
 REGION_NAME = "ap-southeast-2"
 
 async def send_message(message: dict):

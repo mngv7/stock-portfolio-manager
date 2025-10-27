@@ -77,11 +77,11 @@ async def get_portfolio_historical_value(user = Depends(verify_jwt)):
     return portfolio.get_portfolio_historical_value()
 
 @router.post("/api/v1/portfolio/forecast_task")
-def post_monte_carlo_task(user = Depends(verify_jwt)):
+async def post_monte_carlo_task(user = Depends(verify_jwt)):
     groups = user.get("cognito:groups", [])
     if "premium-user" in groups:
         user_uuid = user["sub"]
-        queue.send_message({"task": "monte_carlo", "user": user_uuid})
+        await queue.send_message({"task": "monte_carlo", "user": user_uuid})
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Premium feature - upgrade required"

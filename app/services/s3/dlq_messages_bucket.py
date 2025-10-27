@@ -13,7 +13,7 @@ async def write_message(message: dict, error_class: str, uuid: str = "unknown_us
         key = f"{error_class}/{date.today()}/message_{timestamp}_{uuid}.json"
 
         try:
-            response = s3_client.put_object(Bucket=BUCKET_NAME,
+            response = await s3_client.put_object(Bucket=BUCKET_NAME,
                                             Key=key,
                                             Body=json.dumps(message))
             print(f"PutObject response: {response}")

@@ -83,7 +83,7 @@ export async function getPortfolioHistoricalValue(jwt: string) {
 }
 
 export async function postMonteCarloForecastTask(jwt: string) {
-    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/portfolio/forecast_task`, {
+    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/forecast_task`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${jwt}`
