@@ -24,6 +24,7 @@ async def monte_carlo_worker():
                     WaitTimeSeconds=15,
                     VisibilityTimeout=300
                 )
+
                 logger.info("Receiving message")
 
                 messages = response.get("Messages", [])
@@ -36,10 +37,11 @@ async def monte_carlo_worker():
                         task = json.loads(message['Body'])
                     except json.JSONDecodeError as e:
                         logger.error(f"Failed to parse message body: {e}")
-                        await sqs_client.delete_message(
-                            QueueUrl=SQS_QUEUE_URL,
-                            ReceiptHandle=message["ReceiptHandle"]
-                        )
+                        # Don't delete the message, let it retry for eventual DLQ
+                        # await sqs_client.delete_message(
+                        #     QueueUrl=SQS_QUEUE_URL,
+                        #     ReceiptHandle=message["ReceiptHandle"]
+                        # )
                         continue
 
                     if task.get("type") == "monte_carlo":
@@ -64,7 +66,7 @@ async def monte_carlo_worker():
                     )
             except Exception as e:
                 logger.error(f"Error in worker loop: {e}")
-                await asyncio.sleep(5)  # Prevent tight loop on failure
+                await asyncio.sleep(5)
 
 if __name__ == "__main__":
     asyncio.run(monte_carlo_worker())
