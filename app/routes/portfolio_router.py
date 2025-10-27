@@ -76,8 +76,8 @@ def get_portfolio_historical_value(user = Depends(verify_jwt)):
     load_trades(portfolio)
     return portfolio.get_portfolio_historical_value()
 
-@router.get("/api/v1/portfolio/forecast_task")
-def get_monte_carlo_forecase(user = Depends(verify_jwt)):
+@router.post("/api/v1/portfolio/forecast_task")
+def post_monte_carlo_task(user = Depends(verify_jwt)):
     groups = user.get("cognito:groups", [])
     if "premium-user" in groups:
         user_uuid = user["sub"]

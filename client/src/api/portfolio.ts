@@ -82,17 +82,16 @@ export async function getPortfolioHistoricalValue(jwt: string) {
     return response.json();
 }
 
-export async function getMonteCarloForecast(jwt: string) {
-    const response = await fetch(`https://api.portfoliomanager.cab432.com/v1/api/v1/portfolio/forecast`, {
-        method: "GET",
+export async function postMonteCarloForecastTask(jwt: string) {
+    const response = await fetch(`https://portfoliomanagerapi.cab432.com/v1/api/v1/portfolio/forecast_task`, {
+        method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${jwt}`,
+            "Authorization": `Bearer ${jwt}`
         }
     });
 
     if (!response.ok) {
-        throw new Error(`Error calculating monte carlo forecast ${response.status}`);
+        throw new Error(`Error posting monte carlo forecast task ${response.status}`);
     }
 
     return response.json();
@@ -138,7 +137,7 @@ export async function getReceiptS3Url(timestamp: number, ticker: string, jwt: st
     return response.json();
 }
 
-export async function fetchPortfolioResult(jwt: string) {
+export async function fetchMonteCarloResult(jwt: string) {
     const response = await fetch(`endpoint`, {
         method: "GET",
         headers: {
