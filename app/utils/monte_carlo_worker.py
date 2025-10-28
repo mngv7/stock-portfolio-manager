@@ -37,11 +37,6 @@ async def monte_carlo_worker():
                         task = json.loads(message['Body'])
                     except json.JSONDecodeError as e:
                         logger.error(f"Failed to parse message body: {e}")
-                        # Don't delete the message, let it retry for eventual DLQ
-                        # await sqs_client.delete_message(
-                        #     QueueUrl=SQS_QUEUE_URL,
-                        #     ReceiptHandle=message["ReceiptHandle"]
-                        # )
                         continue
 
                     if task.get("task") == "monte_carlo":
