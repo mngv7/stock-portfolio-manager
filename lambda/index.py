@@ -1,5 +1,4 @@
 import boto3
-import json
 
 sqs = boto3.client('sqs')
 cloudwatch = boto3.client('cloudwatch')
